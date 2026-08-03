@@ -1,0 +1,13 @@
+# Linguist overrides for accurate language detection
+
+# Exclude generated/vendor files from language stats
+frontend/package-lock.json linguist-generated=true
+frontend/index.html linguist-vendored=true
+
+# Mark source files explicitly
+frontend/src/**/*.jsx linguist-language=JSX
+frontend/src/**/*.js linguist-language=JavaScript
+frontend/vite.config.js linguist-language=JavaScript
+
+# Backend Python
+backend/**/*.py linguist-language=Python
