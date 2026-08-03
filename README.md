@@ -1,4 +1,6 @@
-Kindly use the following credentials and update them in the backend .env file.
+Kindly use the following credentials and update them in the backend `.env` file.
+
+Please refer to `challenges.md` for your hackathon challenge details and `Frontend_And_Backend_Run_Instructions.pdf` for setup and run instructions.
 
 # Database Credentials
 
