@@ -3,17 +3,17 @@ import { useState, useRef, useEffect } from 'react'
 const QUICK_PROMPTS = [
   'Suggest something spicy 🌶',
   'Best veg starter?',
-  'Under ₹200 options',
+  'Under 200 calories?',
   "What's popular today?",
   'Light meal for me',
 ]
 
 export default function ChatPanel({ onSuggest }) {
-  const [open, setOpen]       = useState(false)
+  const [open, setOpen]         = useState(false)
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: "Hi! I'm your personal menu assistant. Ask me anything — \"suggest something spicy under ₹300\" or \"what's a good vegetarian starter?\"",
+      text: "Hi! I'm your SpiceRoute assistant. Ask me anything — \"low calorie options\", \"spicy non-veg under ₹300\", or \"best veg starter\".",
     },
   ])
   const [input, setInput]     = useState('')
@@ -28,14 +28,19 @@ export default function ChatPanel({ onSuggest }) {
     const msg = (text || input).trim()
     if (!msg || loading) return
     setInput('')
-    setMessages(prev => [...prev, { role: 'user', text: msg }])
+
+    const updatedMessages = [...messages, { role: 'user', text: msg }]
+    setMessages(updatedMessages)
     setLoading(true)
 
     try {
       const res  = await fetch('/api/chat/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({
+          message: msg,
+          history: updatedMessages.slice(-10), // send last 10 msgs as context
+        }),
       })
       const data = await res.json()
       setMessages(prev => [...prev, { role: 'bot', text: data.reply }])
@@ -66,7 +71,6 @@ export default function ChatPanel({ onSuggest }) {
       >
         🤖
         <span className="sr-chat-fab-label">AI Menu Assistant</span>
-        {/* unread dot when closed */}
         {!open && <span className="sr-chat-fab-dot" />}
       </button>
 
@@ -89,7 +93,9 @@ export default function ChatPanel({ onSuggest }) {
           <div className="sr-chat-messages">
             {messages.map((m, i) => (
               <div key={i} className={`sr-msg ${m.role}`}>
-                <div className="sr-msg-bubble">{m.text}</div>
+                <div className="sr-msg-bubble" style={{ whiteSpace: 'pre-wrap' }}>
+                  {m.text}
+                </div>
               </div>
             ))}
             {loading && (
