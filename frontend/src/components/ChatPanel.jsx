@@ -8,16 +8,21 @@ const QUICK_PROMPTS = [
   'Light meal for me',
 ]
 
+const INITIAL_MESSAGE = [{
+  role: 'bot',
+  text: "Hi! I'm your SpiceRoute assistant. Ask me anything — \"low calorie options\", \"spicy non-veg under ₹300\", or \"best veg starter\".",
+}]
+
 export default function ChatPanel({ onSuggest }) {
-  const [messages, setMessages] = useState([
-    {
-      role: 'bot',
-      text: "Hi! I'm your SpiceRoute assistant. Ask me anything — \"low calorie options\", \"spicy non-veg under ₹300\", or \"best veg starter\".",
-    },
-  ])
+  const [messages, setMessages] = useState(INITIAL_MESSAGE)
   const [input, setInput]     = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef             = useRef(null)
+
+  function clearChat() {
+    setMessages(INITIAL_MESSAGE)
+    onSuggest([])
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -58,6 +63,14 @@ export default function ChatPanel({ onSuggest }) {
         <i className="bi bi-robot me-2"></i>
         <span>AI Menu Assistant</span>
         <span className="sr-chat-online-dot ms-auto" title="Online"></span>
+        <button
+          className="sr-chat-clear ms-2"
+          onClick={clearChat}
+          title="Clear chat"
+          aria-label="Clear chat"
+        >
+          <i className="bi bi-arrow-counterclockwise"></i>
+        </button>
       </div>
 
       {/* Scrollable message list */}

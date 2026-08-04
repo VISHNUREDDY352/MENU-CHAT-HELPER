@@ -751,6 +751,19 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   background: var(--success);
   flex-shrink: 0;
 }
+.sr-chat-clear {
+  background: none;
+  border: none;
+  color: var(--dark-3);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+}
+.sr-chat-clear:hover { color: var(--error); background: rgba(255,59,59,0.1); }
 
 /* ════════════════════════════════════════
    COMPONENTS — style guide section 07
