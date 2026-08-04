@@ -1229,3 +1229,36 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   transition: opacity 0.15s;
 }
 .sr-toast-close:hover { opacity: 1; }
+
+/* ── Quantity control on menu cards ── */
+.sr-qty-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid var(--main);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.sr-qty-btn {
+  background: var(--main);
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+.sr-qty-btn:hover { background: var(--main-dark); }
+.sr-qty-count {
+  background: #fff;
+  color: var(--main);
+  font-family: 'Mulish', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 4px 10px;
+  min-width: 28px;
+  text-align: center;
+}

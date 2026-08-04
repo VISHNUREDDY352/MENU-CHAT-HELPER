@@ -58,6 +58,24 @@ export default function App() {
     })
   }
 
+  // Decrement qty by 1 from card button (removes if qty reaches 0)
+  function decrementCart(id) {
+    const item = cart.find(c => c.id === id)
+    if (!item) return
+    setCart(prev => {
+      const next = item.qty === 1
+        ? prev.filter(c => c.id !== id)
+        : prev.map(c => c.id === id ? { ...c, qty: c.qty - 1 } : c)
+      saveCart(next)
+      return next
+    })
+    addToast({
+      message: item.qty === 1 ? `${item.name} removed` : `${item.name} × ${item.qty - 1}`,
+      type: item.qty === 1 ? 'error' : 'info',
+      icon: item.qty === 1 ? 'bi-trash' : 'bi-dash-circle'
+    })
+  }
+
   if (loading) return (
     <div className="sr-loading-screen">
       <div className="sr-loading-brand"><i className="bi bi-cup-hot me-2"></i>SpiceRoute</div>
@@ -93,7 +111,7 @@ export default function App() {
       <div className="sr-body-layout">
         {/* Left: scrollable menu */}
         <div className="sr-menu-col">
-          <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
+          <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} cart={cart} onRemove={decrementCart} />
         </div>
         {/* Right: fixed chat panel */}
         <div className="sr-chat-col">

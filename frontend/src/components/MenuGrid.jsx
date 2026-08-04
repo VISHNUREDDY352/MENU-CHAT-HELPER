@@ -14,9 +14,11 @@ const CATEGORY_FALLBACK = {
   drink:   'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80',
 }
 
-export default function MenuGrid({ items, suggested, onAdd }) {
+export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
   // suggested is now an array of item IDs (integers)
   const suggestedSet = new Set(suggested)
+  // quick lookup: item id → qty in cart
+  const cartMap = Object.fromEntries((cart || []).map(c => [c.id, c.qty]))
 
   const [vegOnly,    setVegOnly]    = useState(false)
   const [spicyOnly,  setSpicyOnly]  = useState(false)
@@ -117,15 +119,35 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                           )}
                         </div>
 
-                        {/* Price + Add */}
+                        {/* Price + Add / Qty controls */}
                         <div className="d-flex justify-content-between align-items-center mt-auto">
                           <span className="sr-price fw-bold">₹{Number(item.price).toFixed(0)}</span>
-                          <button
-                            className="btn-sr-sm btn-sr-primary"
-                            onClick={() => onAdd(item)}
-                          >
-                            <i className="bi bi-plus"></i>Add to cart
-                          </button>
+                          {cartMap[item.id] ? (
+                            <div className="sr-qty-control">
+                              <button
+                                className="sr-qty-btn"
+                                onClick={() => onRemove(item.id)}
+                                aria-label="Remove one"
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+                              <span className="sr-qty-count">{cartMap[item.id]}</span>
+                              <button
+                                className="sr-qty-btn"
+                                onClick={() => onAdd(item)}
+                                aria-label="Add one more"
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn-sr-sm btn-sr-primary"
+                              onClick={() => onAdd(item)}
+                            >
+                              <i className="bi bi-plus"></i>Add to cart
+                            </button>
+                          )}
                         </div>
                       </div>
 
