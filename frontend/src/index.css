@@ -287,18 +287,99 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
 .sr-add-btn {
   background: var(--main);
   color: #fff;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 8px;
-  padding: 0.3rem 0.75rem;
-  font-weight: 700;
-  font-size: 0.8rem;
+  padding: 12px 24px;
+  font-family: 'Mulish', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.sr-add-btn:hover { background: var(--main-dark); transform: scale(1.05); }
-.sr-add-btn:active { transform: scale(0.97); }
+.sr-add-btn:hover   { background: var(--main-light); color: var(--main-dark); }
+.sr-add-btn:active  { background: var(--main-dark);  color: #fff; }
+.sr-add-btn:focus   { outline: none; box-shadow: 0 0 0 3px rgba(51,119,255,0.35); }
+.sr-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Chat panel header font ── */
+/* ── Button system — style guide spec ── */
+
+/* Small: 12px 24px, 14px */
+.btn-sr, .btn-sr-sm, .btn-sr-md, .btn-sr-lg {
+  font-family: 'Mulish', sans-serif;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  line-height: 1;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.btn-sr-sm { padding: 12px 24px; font-size: 14px; }
+.btn-sr-md { padding: 14px 32px; font-size: 16px; }
+.btn-sr-lg { padding: 16px 48px; font-size: 18px; }
+
+/* Primary: bg #3377FF, text white */
+.btn-sr-primary {
+  background: var(--main); color: #fff; border-color: transparent;
+}
+.btn-sr-primary:hover   { background: var(--main-light); color: var(--main-dark); }
+.btn-sr-primary:active  { background: var(--main-dark);  color: #fff; }
+.btn-sr-primary:focus   { background: var(--main); color: #fff; outline: none; box-shadow: 0 0 0 3px rgba(51,119,255,0.35); }
+.btn-sr-primary:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Secondary: bg #F2F2F5, text #3A3A3C, border #C7C9D9 */
+.btn-sr-secondary {
+  background: var(--light-3); color: var(--dark-1); border-color: var(--dark-4);
+}
+.btn-sr-secondary:hover  { background: var(--light-2); border-color: var(--dark-3); }
+.btn-sr-secondary:active { background: var(--dark-4); }
+.btn-sr-secondary:focus  { outline: none; border-color: var(--main); box-shadow: 0 0 0 3px rgba(51,119,255,0.2); }
+.btn-sr-secondary:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Ghost: transparent bg, no border */
+.btn-sr-ghost {
+  background: transparent; color: var(--dark-1); border-color: transparent;
+}
+.btn-sr-ghost:hover  { background: var(--light-3); }
+.btn-sr-ghost:active { background: var(--light-2); }
+.btn-sr-ghost:focus  { outline: none; box-shadow: 0 0 0 3px rgba(51,119,255,0.2); }
+.btn-sr-ghost:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Mobile: full width */
+@media (max-width: 767px) {
+  .btn-sr-mobile { width: 100%; height: 44px; }
+}
+
+/* ── Send button (chat) uses medium primary ── */
+.sr-send-btn {
+  background: var(--main);
+  color: #fff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: 'Mulish', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.sr-send-btn:hover:not(:disabled)  { background: var(--main-light); color: var(--main-dark); }
+.sr-send-btn:active:not(:disabled) { background: var(--main-dark);  color: #fff; }
+.sr-send-btn:focus  { outline: none; box-shadow: 0 0 0 3px rgba(51,119,255,0.35); }
+.sr-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .sr-chat-header {
   background: var(--dark-1);
   color: var(--main-light);
@@ -398,21 +479,6 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
 }
 .sr-chat-input input:focus { border-color: var(--main); background: var(--light-4); }
 .sr-chat-input input::placeholder { color: var(--dark-3); }
-.sr-send-btn {
-  background: var(--main);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.55rem 1rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-.sr-send-btn:hover:not(:disabled) { background: var(--main-dark); }
-.sr-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
 /* ── Quick prompt chips ── */
 .sr-quick-chips {
   padding: 0.5rem 0.75rem;
@@ -473,23 +539,22 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   z-index: 200;
   background: var(--main);
   color: #fff;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 99px;
-  padding: 0.75rem 1.25rem;
+  padding: 14px 32px;
   font-family: 'Mulish', sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(51,119,255,0.4);
-  transition: background 0.15s, transform 0.15s;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.sr-chat-fab:hover {
-  background: var(--main-dark);
-  transform: scale(1.05);
-}
+.sr-chat-fab:hover  { background: var(--main-light); color: var(--main-dark); }
+.sr-chat-fab:active { background: var(--main-dark);  color: #fff; }
+.sr-chat-fab:focus  { outline: none; box-shadow: 0 0 0 3px rgba(51,119,255,0.35); }
 .sr-chat-fab-label {
   font-size: 0.875rem;
 }
