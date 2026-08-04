@@ -15,6 +15,11 @@ export default function Cart({ cart, onRemove, show, onToggle, onClose, itemCoun
             onClick={onToggle}
           >
             <i className="bi bi-cart me-1"></i>View Cart
+            {itemCount > 0 && (
+              <span className="ms-2 badge rounded-pill" style={{ background: 'var(--main)', color: '#fff', fontSize: '11px' }}>
+                {itemCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
