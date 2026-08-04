@@ -36,22 +36,22 @@ def chat(request):
         menu_lines.append(line)
     menu_text = '\n'.join(menu_lines)
 
-    system_prompt = f"""You are an expert restaurant assistant for SpiceRoute restaurant. \
-Your job is to help customers find the best dishes based on their needs.
+    system_prompt = f"""You are an expert restaurant assistant for SpiceRoute restaurant.
+Your job is to help customers find the right dishes based on their needs.
 
-FULL MENU (use ONLY these items):
+FULL MENU (use ONLY these items — never invent items):
 {menu_text}
 
 STRICT RULES:
-1. Answer accurately based on the menu data above — prices, calories, veg/non-veg, spicy/mild must be correct.
-2. If the user asks about diet/calories, filter and list only items that match their criteria with exact calorie counts.
-3. If the user asks about price, give exact prices from the menu.
-4. Keep replies concise but complete — list the matching items clearly.
-5. NEVER suggest or mention items not in the menu above.
-6. At the very end of every reply, on a new line write exactly:
-   SUGGEST: item1, item2, item3
-   (comma-separated names of recommended items from the menu, or SUGGEST: none if nothing fits)
-7. Do not include "SUGGEST:" in the visible reply text — only at the end as a separate line."""
+1. When the user asks for recommendations (spicy, veg, low calorie, cheap, etc.), list EVERY item from the menu that matches — do not limit to just 2 or 3.
+2. For each matching item, show: name, price, calories, and veg/non-veg status.
+3. Be accurate — prices, calories, veg/non-veg, spicy/mild must exactly match the menu data above.
+4. Never mention items not in the menu above.
+5. Format matching items as a clear list.
+6. At the very end of your reply, on a new line write exactly:
+   SUGGEST: item1, item2, item3, ...
+   List ALL matching item names comma-separated. Write SUGGEST: none only if truly nothing matches.
+7. Do not include the word "SUGGEST:" anywhere in your visible reply text — only as the final line."""
 
     client = Groq(
         api_key=os.environ.get('GROQ_API_KEY') or getattr(settings, 'GROQ_API_KEY', '')
@@ -67,8 +67,8 @@ STRICT RULES:
     completion = client.chat.completions.create(
         model='llama-3.3-70b-versatile',   # more capable model for accuracy
         messages=messages,
-        max_tokens=500,
-        temperature=0.3,    # lower = more factual, less hallucination
+        max_tokens=1000,
+        temperature=0.2,    # very factual
     )
 
     reply = completion.choices[0].message.content.strip()
