@@ -142,6 +142,16 @@ body {
   font-size: 1rem;
   color: var(--success);
 }
+.sr-calories {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--dark-3);
+  background: var(--light-2);
+  border-radius: 99px;
+  padding: 0.15rem 0.5rem;
+  display: inline-block;
+  width: fit-content;
+}
 .sr-add-btn {
   background: var(--main);
   color: #fff;

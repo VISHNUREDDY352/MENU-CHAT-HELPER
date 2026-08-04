@@ -70,6 +70,10 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                           )}
                         </div>
 
+                        {item.calories && (
+                          <div className="sr-calories">🔥 {item.calories} kcal</div>
+                        )}
+
                         <div className="d-flex justify-content-between align-items-center mt-auto pt-2">
                           <span className="sr-price">₹{Number(item.price).toFixed(0)}</span>
                           <button className="sr-add-btn" onClick={() => onAdd(item)}>+ Add</button>

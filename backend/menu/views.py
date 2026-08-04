@@ -24,7 +24,8 @@ def chat(request):
     menu_text = '\n'.join(
         f"- {i.name} | {i.category} | ₹{i.price} | "
         f"{'veg' if i.is_veg else 'non-veg'} | "
-        f"{'spicy' if i.is_spicy else 'mild'}"
+        f"{'spicy' if i.is_spicy else 'mild'} | "
+        f"{i.calories if i.calories else 'N/A'} kcal"
         for i in items
     )
 

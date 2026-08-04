@@ -15,6 +15,7 @@ class MenuItem(models.Model):
     is_veg      = models.BooleanField(default=False)
     is_spicy    = models.BooleanField(default=False)
     image_url   = models.URLField(blank=True)
+    calories    = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
