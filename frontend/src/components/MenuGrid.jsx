@@ -2,10 +2,16 @@ import { useState } from 'react'
 
 const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink']
 const CATEGORY_LABEL = {
-  starter: { icon: 'bi-egg-fried',   label: 'Starters' },
-  main:    { icon: 'bi-fire',         label: 'Main Course' },
-  dessert: { icon: 'bi-cake',         label: 'Desserts' },
-  drink:   { icon: 'bi-cup-straw',    label: 'Drinks' },
+  starter: { icon: 'bi-egg-fried',   label: 'Starters',    svg: null },
+  main:    { icon: 'bi-fire',         label: 'Main Course', svg: null },
+  dessert: { icon: null,              label: 'Desserts',
+    svg: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2" style={{verticalAlign:'-0.15em'}}>
+        <path d="M8 0a1 1 0 0 1 1 1v1h2a1 1 0 0 1 .894.553l1 2A1 1 0 0 1 12 6H4a1 1 0 0 1-.894-1.447l1-2A1 1 0 0 1 5 2h2V1a1 1 0 0 1 1-1zM2 7h12l-1.5 7H3.5L2 7z"/>
+      </svg>
+    )
+  },
+  drink:   { icon: 'bi-cup-straw',    label: 'Drinks',      svg: null },
 }
 const CATEGORY_FALLBACK = {
   starter: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=400&q=80',
@@ -33,7 +39,9 @@ export default function MenuGrid({ items, suggested, onAdd }) {
           </li>
           {CATEGORY_ORDER.map(cat => (
             <li key={cat} className={`sr-breadcrumb-item ${activeCat === cat ? 'active' : ''}`}>
-              <i className={`bi ${CATEGORY_LABEL[cat].icon} me-1`}></i>
+              {CATEGORY_LABEL[cat].svg
+                ? CATEGORY_LABEL[cat].svg
+                : <i className={`bi ${CATEGORY_LABEL[cat].icon} me-1`}></i>}
               <button onClick={() => setActiveCat(cat)}>{CATEGORY_LABEL[cat].label}</button>
             </li>
           ))}
@@ -65,7 +73,9 @@ export default function MenuGrid({ items, suggested, onAdd }) {
         return (
           <section key={cat} className="sr-category-section">
             <h2 className="sr-category-title">
-              <i className={`bi ${CATEGORY_LABEL[cat].icon} me-2`}></i>
+              {CATEGORY_LABEL[cat].svg
+                ? CATEGORY_LABEL[cat].svg
+                : <i className={`bi ${CATEGORY_LABEL[cat].icon} me-2`}></i>}
               {CATEGORY_LABEL[cat].label}
             </h2>
 
