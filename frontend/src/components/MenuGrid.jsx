@@ -95,9 +95,6 @@ export default function MenuGrid({ items, suggested, onAdd }) {
               {group.map(item => {
                 const isHighlighted = suggestedLower.includes(item.name.toLowerCase().trim())
 
-                // Avatar initials from item name
-                const initials = item.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
-
                 return (
                   <div key={item.id} className="sr-menu-card-col">
                     <div className={`card h-100 shadow-sm sr-card ${isHighlighted ? 'highlighted' : ''}`}>
@@ -119,13 +116,8 @@ export default function MenuGrid({ items, suggested, onAdd }) {
 
                       <div className="card-body d-flex flex-column gap-1 p-2">
 
-                        {/* Avatar + name row */}
-                        <div className="d-flex align-items-center gap-2">
-                          <div className="sr-avatar-initials" aria-label={item.name}>
-                            {initials}
-                          </div>
-                          <div className="sr-label-lg">{item.name}</div>
-                        </div>
+                        {/* Name row */}
+                        <div className="sr-label-lg">{item.name}</div>
 
                         {item.description && (
                           <div className="sr-body-sm text-muted sr-card-desc">{item.description}</div>
