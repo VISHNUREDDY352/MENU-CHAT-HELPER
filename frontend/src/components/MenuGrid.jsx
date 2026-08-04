@@ -4,7 +4,7 @@ const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink']
 const CATEGORY_LABEL = {
   starter: { icon: 'bi-egg-fried',   label: 'Starters' },
   main:    { icon: 'bi-fire',         label: 'Main Course' },
-  dessert: { icon: 'bi-cake2',        label: 'Desserts' },
+  dessert: { icon: 'bi-cake',         label: 'Desserts' },
   drink:   { icon: 'bi-cup-straw',    label: 'Drinks' },
 }
 const CATEGORY_FALLBACK = {
