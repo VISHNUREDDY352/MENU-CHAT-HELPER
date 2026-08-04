@@ -45,7 +45,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Cart bar */}
+      {/* Cart — floating card (bottom left) */}
       <Cart cart={cart} onRemove={removeFromCart} />
 
       {/* Menu — grid per style guide spec */}
