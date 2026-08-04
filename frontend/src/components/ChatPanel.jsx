@@ -4,7 +4,7 @@ const QUICK_PROMPTS = [
   'Suggest something spicy 🌶',
   'Best veg starter?',
   'Under ₹200 options',
-  'What\'s popular today?',
+  "What's popular today?",
   'Light meal for me',
 ]
 
@@ -12,7 +12,7 @@ export default function ChatPanel({ onSuggest }) {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: 'Hi! I\'m your personal menu assistant. Ask me anything — "suggest something spicy under ₹300" or "what\'s a good vegetarian starter?"',
+      text: "Hi! I'm your personal menu assistant. Ask me anything — \"suggest something spicy under ₹300\" or \"what's a good vegetarian starter?\"",
     },
   ])
   const [input, setInput]     = useState('')
@@ -55,12 +55,12 @@ export default function ChatPanel({ onSuggest }) {
   }
 
   return (
-    <div className="sr-chat">
+    <div className="sr-chat shadow-sm">
       {/* Header */}
       <div className="sr-chat-header">
         <span>🤖</span>
         <span>AI Menu Assistant</span>
-        <span className="dot" title="Online" />
+        <span className="dot" />
       </div>
 
       {/* Messages */}
@@ -91,8 +91,9 @@ export default function ChatPanel({ onSuggest }) {
 
       {/* Input */}
       <div className="sr-chat-input">
-        <form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+        <form onSubmit={handleSubmit} className="d-contents w-100 d-flex gap-2">
           <input
+            className="form-control form-control-sm"
             placeholder="Ask for suggestions..."
             value={input}
             onChange={e => setInput(e.target.value)}

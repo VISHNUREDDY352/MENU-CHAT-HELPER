@@ -49,9 +49,15 @@ export default function App() {
       <Cart cart={cart} onRemove={removeFromCart} />
 
       {/* Main layout */}
-      <div className="sr-layout">
-        <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
-        <ChatPanel onSuggest={setSuggested} />
+      <div className="container-fluid px-3 px-md-4 py-3" style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <div className="row g-3 align-items-start">
+          <div className="col-12 col-lg-8 col-xl-9">
+            <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
+          </div>
+          <div className="col-12 col-lg-4 col-xl-3">
+            <ChatPanel onSuggest={setSuggested} />
+          </div>
+        </div>
       </div>
     </>
   )

@@ -2,22 +2,30 @@ export default function Cart({ cart, onRemove }) {
   const total = cart.reduce((s, i) => s + Number(i.price) * i.qty, 0)
 
   if (cart.length === 0) return (
-    <div className="sr-cart">
-      <span className="sr-cart-empty">🛒 Your cart is empty — add something delicious!</span>
+    <div className="sr-cart d-flex align-items-center">
+      <span className="text-secondary small">🛒 Your cart is empty — add something delicious!</span>
     </div>
   )
 
   return (
-    <div className="sr-cart">
-      <span className="sr-cart-label">🛒 Cart</span>
+    <div className="sr-cart d-flex align-items-center flex-wrap gap-2">
+      <span className="fw-semibold small" style={{ color: 'var(--gold)' }}>🛒 Cart</span>
+
       {cart.map(item => (
-        <span key={item.id} className="sr-cart-chip">
+        <span key={item.id} className="badge rounded-pill d-inline-flex align-items-center gap-1"
+          style={{ background: 'var(--dark-3)', color: '#e5e7eb', border: '1px solid #374151', fontWeight: 400 }}>
           {item.name}
           {item.qty > 1 && <strong> ×{item.qty}</strong>}
-          <button onClick={() => onRemove(item.id)} title="Remove">✕</button>
+          <button
+            className="btn-close btn-close-white ms-1"
+            style={{ fontSize: '0.55rem' }}
+            onClick={() => onRemove(item.id)}
+            aria-label="Remove"
+          />
         </span>
       ))}
-      <span className="sr-cart-total">₹{total.toFixed(2)}</span>
+
+      <span className="ms-auto fw-bold sr-cart-total">₹{total.toFixed(2)}</span>
     </div>
   )
 }
