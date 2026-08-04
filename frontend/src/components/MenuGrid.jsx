@@ -15,7 +15,8 @@ const CATEGORY_FALLBACK = {
 }
 
 export default function MenuGrid({ items, suggested, onAdd }) {
-  const suggestedIds = suggested.map(s => s.toLowerCase().trim())
+  // suggested is now an array of item IDs (integers)
+  const suggestedSet = new Set(suggested)
 
   const [vegOnly,    setVegOnly]    = useState(false)
   const [spicyOnly,  setSpicyOnly]  = useState(false)
@@ -72,7 +73,7 @@ export default function MenuGrid({ items, suggested, onAdd }) {
             {/* Bootstrap grid: 3 cols desktop, 2 tablet, 1 mobile */}
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
               {group.map(item => {
-                const isHighlighted = suggestedIds.includes(item.name.toLowerCase().trim())
+                const isHighlighted = suggestedSet.has(item.id)
                 return (
                   <div key={item.id} className="col">
                     <div className={`card h-100 sr-card ${isHighlighted ? 'highlighted' : ''}`}>

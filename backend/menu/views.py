@@ -74,13 +74,22 @@ STRICT RULES:
     reply = completion.choices[0].message.content.strip()
 
     # Parse SUGGEST line
-    suggested  = []
-    reply_txt  = reply
+    suggested     = []
+    suggested_ids = []
+    reply_txt     = reply
+
     if 'SUGGEST:' in reply:
         parts     = reply.split('SUGGEST:')
         reply_txt = parts[0].strip()
-        raw       = parts[-1].strip().split('\n')[0]  # only first line after SUGGEST:
+        raw       = parts[-1].strip().split('\n')[0]
         if raw.lower() != 'none':
             suggested = [s.strip() for s in raw.split(',') if s.strip()]
+            # Resolve names → IDs
+            name_to_id = {i.name.lower().strip(): i.id for i in items}
+            suggested_ids = [
+                name_to_id[n.lower().strip()]
+                for n in suggested
+                if n.lower().strip() in name_to_id
+            ]
 
-    return Response({'reply': reply_txt, 'suggested': suggested})
+    return Response({'reply': reply_txt, 'suggested': suggested, 'suggested_item_ids': suggested_ids})

@@ -45,7 +45,7 @@ export default function ChatPanel({ onSuggest }) {
       })
       const data = await res.json()
       setMessages(prev => [...prev, { role: 'bot', text: data.reply }])
-      onSuggest(data.suggested || [])
+      onSuggest(data.suggested_item_ids || [])
     } catch {
       setMessages(prev => [
         ...prev,
