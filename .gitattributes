@@ -1,13 +1,22 @@
 # Linguist overrides for accurate language detection
 
-# Exclude generated/vendor files from language stats
+# ── Exclude from language stats ──
 frontend/package-lock.json linguist-generated=true
-frontend/index.html linguist-vendored=true
+frontend/node_modules/**   linguist-vendored=true
+frontend/index.html        linguist-vendored=true
+frontend/public/**         linguist-vendored=true
 
-# Mark source files explicitly
-frontend/src/**/*.jsx linguist-language=JSX
-frontend/src/**/*.js linguist-language=JavaScript
-frontend/vite.config.js linguist-language=JavaScript
+# ── CSS — exclude from stats so it doesn't dominate ──
+frontend/src/index.css     linguist-detectable=false
 
-# Backend Python
-backend/**/*.py linguist-language=Python
+# ── React JSX → show as JavaScript ──
+frontend/src/**/*.jsx      linguist-language=JavaScript
+frontend/src/**/*.jsx      linguist-detectable=true
+frontend/src/**/*.js       linguist-language=JavaScript
+frontend/src/**/*.js       linguist-detectable=true
+frontend/vite.config.js    linguist-language=JavaScript
+frontend/vite.config.js    linguist-detectable=true
+
+# ── Backend Python ──
+backend/**/*.py            linguist-language=Python
+backend/**/*.py            linguist-detectable=true
