@@ -14,7 +14,7 @@ export default function Cart({ cart, onRemove, show, onToggle, onClose, itemCoun
             className="btn-sr-sm btn-sr-secondary ms-auto"
             onClick={onToggle}
           >
-            <i className="bi bi-eye me-1"></i>View
+            <i className="bi bi-cart me-1"></i>View Cart
           </button>
         </div>
       </div>
