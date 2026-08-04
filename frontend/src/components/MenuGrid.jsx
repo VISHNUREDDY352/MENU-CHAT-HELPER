@@ -7,7 +7,6 @@ const CATEGORY_LABEL = {
   dessert: { icon: 'bi-ice-cream',  label: 'Desserts' },
   drink:   { icon: 'bi-cup-straw',  label: 'Drinks' },
 }
-
 const CATEGORY_FALLBACK = {
   starter: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=400&q=80',
   main:    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
@@ -16,63 +15,42 @@ const CATEGORY_FALLBACK = {
 }
 
 export default function MenuGrid({ items, suggested, onAdd }) {
-  const suggestedLower = suggested.map(s => s.toLowerCase().trim())
+  const suggestedIds = suggested.map(s => s.toLowerCase().trim())
 
-  // ── Selection tool filters ──
-  const [vegOnly,   setVegOnly]   = useState(false)
-  const [spicyOnly, setSpicyOnly] = useState(false)
+  const [vegOnly,    setVegOnly]    = useState(false)
+  const [spicyOnly,  setSpicyOnly]  = useState(false)
+  const [activeCat,  setActiveCat]  = useState('all')
 
-  // ── Breadcrumb active category ──
-  const [activecat, setActivecat] = useState('all')
-
-  const visibleCats = activecat === 'all'
-    ? CATEGORY_ORDER
-    : [activecat]
+  const visibleCats = activeCat === 'all' ? CATEGORY_ORDER : [activeCat]
 
   return (
-    <div className="d-flex flex-column">
-
+    <div>
       {/* ── Breadcrumb category nav ── */}
       <nav className="sr-breadcrumb-nav" aria-label="Menu categories">
         <ol className="sr-breadcrumb">
-          <li className={`sr-breadcrumb-item ${activecat === 'all' ? 'active' : ''}`}>
-            <button onClick={() => setActivecat('all')}>All</button>
+          <li className={`sr-breadcrumb-item ${activeCat === 'all' ? 'active' : ''}`}>
+            <button onClick={() => setActiveCat('all')}>All</button>
           </li>
           {CATEGORY_ORDER.map(cat => (
-            <li key={cat} className={`sr-breadcrumb-item ${activecat === cat ? 'active' : ''}`}>
+            <li key={cat} className={`sr-breadcrumb-item ${activeCat === cat ? 'active' : ''}`}>
               <i className={`bi ${CATEGORY_LABEL[cat].icon} me-1`}></i>
-              <button onClick={() => setActivecat(cat)}>{CATEGORY_LABEL[cat].label}</button>
+              <button onClick={() => setActiveCat(cat)}>{CATEGORY_LABEL[cat].label}</button>
             </li>
           ))}
         </ol>
       </nav>
 
-      {/* ── Selection tools: toggle + checkboxes ── */}
-      <div className="sr-filter-bar d-flex align-items-center gap-4 flex-wrap">
-        {/* Veg toggle */}
+      {/* ── Filters ── */}
+      <div className="sr-filter-bar d-flex align-items-center gap-4 flex-wrap mb-3">
         <label className="sr-toggle-label">
           <span className="sr-label">Veg Only</span>
           <div className="sr-toggle-wrap">
-            <input
-              type="checkbox"
-              className="sr-toggle-input"
-              checked={vegOnly}
-              onChange={e => setVegOnly(e.target.checked)}
-            />
-            <span className="sr-toggle-track">
-              <span className="sr-toggle-thumb" />
-            </span>
+            <input type="checkbox" className="sr-toggle-input" checked={vegOnly} onChange={e => setVegOnly(e.target.checked)} />
+            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
           </div>
         </label>
-
-        {/* Spicy checkbox */}
         <label className="sr-checkbox-label">
-          <input
-            type="checkbox"
-            className="sr-checkbox"
-            checked={spicyOnly}
-            onChange={e => setSpicyOnly(e.target.checked)}
-          />
+          <input type="checkbox" className="sr-checkbox" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
           <span className="sr-label">Spicy</span>
         </label>
       </div>
@@ -91,64 +69,61 @@ export default function MenuGrid({ items, suggested, onAdd }) {
               {CATEGORY_LABEL[cat].label}
             </h2>
 
-            <div className="sr-menu-grid">
+            {/* Bootstrap grid: 3 cols desktop, 2 tablet, 1 mobile */}
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
               {group.map(item => {
-                const isHighlighted = suggestedLower.includes(item.name.toLowerCase().trim())
-
+                const isHighlighted = suggestedIds.includes(item.name.toLowerCase().trim())
                 return (
-                  <div key={item.id} className="sr-menu-card-col">
-                    <div className={`card h-100 shadow-sm sr-card ${isHighlighted ? 'highlighted' : ''}`}>
+                  <div key={item.id} className="col">
+                    <div className={`card h-100 sr-card ${isHighlighted ? 'highlighted' : ''}`}>
 
                       {isHighlighted && (
                         <div className="sr-ai-badge"><i className="bi bi-stars me-1"></i>AI Pick</div>
                       )}
 
                       <img
-                        src={item.image_url || CATEGORY_FALLBACK[item.category] || CATEGORY_FALLBACK.main}
-                        className="sr-card-img"
+                        src={item.image_url || CATEGORY_FALLBACK[item.category]}
+                        className="card-img-top sr-card-img"
                         alt={item.name}
                         loading="lazy"
-                        onError={e => {
-                          e.target.onerror = null
-                          e.target.src = CATEGORY_FALLBACK[item.category] || CATEGORY_FALLBACK.main
-                        }}
+                        onError={e => { e.target.onerror = null; e.target.src = CATEGORY_FALLBACK[item.category] }}
                       />
 
-                      <div className="card-body d-flex flex-column gap-1 p-2">
-
-                        {/* Name row */}
-                        <div className="sr-label-lg">{item.name}</div>
+                      <div className="card-body d-flex flex-column p-3">
+                        <h6 className="card-title sr-label-lg mb-1">{item.name}</h6>
 
                         {item.description && (
-                          <div className="sr-body-sm text-muted sr-card-desc">{item.description}</div>
+                          <p className="card-text sr-body-sm text-muted sr-card-desc mb-2">{item.description}</p>
                         )}
 
                         {/* Badges */}
-                        <div className="d-flex flex-wrap gap-1 mt-1">
+                        <div className="d-flex flex-wrap gap-1 mb-2">
                           <span className="badge rounded-pill sr-label-xs" style={{
-                            background: item.is_veg ? '#06C270' : '#FF3B3B', color: '#fff'
+                            background: item.is_veg ? 'var(--success)' : 'var(--error)', color: '#fff'
                           }}>
-                            {item.is_veg
-                              ? <><i className="bi bi-flower1 me-1"></i>Veg</>
-                              : <><i className="bi bi-egg me-1"></i>Non-veg</>}
+                            <i className={`bi ${item.is_veg ? 'bi-flower1' : 'bi-egg'} me-1`}></i>
+                            {item.is_veg ? 'Veg' : 'Non-veg'}
                           </span>
                           {item.is_spicy && (
-                            <span className="badge rounded-pill sr-label-xs" style={{ background: '#FFCC00', color: '#3A3A3C' }}>
+                            <span className="badge rounded-pill sr-label-xs" style={{ background: 'var(--warning)', color: 'var(--dark-1)' }}>
                               <i className="bi bi-thermometer-high me-1"></i>Spicy
+                            </span>
+                          )}
+                          {item.calories && (
+                            <span className="badge rounded-pill sr-label-xs" style={{ background: 'var(--light-2)', color: 'var(--dark-2)' }}>
+                              <i className="bi bi-fire me-1"></i>{item.calories} kcal
                             </span>
                           )}
                         </div>
 
-                        {item.calories && (
-                          <div className="sr-calories sr-label-sm">
-                            <i className="bi bi-fire me-1"></i>{item.calories} kcal
-                          </div>
-                        )}
-
-                        <div className="d-flex justify-content-between align-items-center mt-auto pt-2">
-                          <span className="sr-price sr-h5">₹{Number(item.price).toFixed(0)}</span>
-                          <button className="sr-add-btn btn-sr-sm btn-sr-primary" onClick={() => onAdd(item)}>
-                            <i className="bi bi-plus"></i>Add
+                        {/* Price + Add */}
+                        <div className="d-flex justify-content-between align-items-center mt-auto">
+                          <span className="sr-price fw-bold">₹{Number(item.price).toFixed(0)}</span>
+                          <button
+                            className="btn-sr-sm btn-sr-primary"
+                            onClick={() => onAdd(item)}
+                          >
+                            <i className="bi bi-plus"></i>Add to cart
                           </button>
                         </div>
                       </div>
