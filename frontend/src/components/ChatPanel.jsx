@@ -9,6 +9,7 @@ const QUICK_PROMPTS = [
 ]
 
 export default function ChatPanel({ onSuggest }) {
+  const [open, setOpen]       = useState(false)
   const [messages, setMessages] = useState([
     {
       role: 'bot',
@@ -20,8 +21,8 @@ export default function ChatPanel({ onSuggest }) {
   const bottomRef             = useRef(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+    if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading, open])
 
   async function send(text) {
     const msg = (text || input).trim()
@@ -55,56 +56,79 @@ export default function ChatPanel({ onSuggest }) {
   }
 
   return (
-    <div className="sr-chat shadow-sm">
-      {/* Header */}
-      <div className="sr-chat-header">
-        <span>🤖</span>
-        <span>AI Menu Assistant</span>
-        <span className="dot" />
-      </div>
+    <>
+      {/* Floating toggle button */}
+      <button
+        className="sr-chat-fab"
+        onClick={() => setOpen(o => !o)}
+        aria-label="Toggle AI Chat Assistant"
+        title="AI Menu Assistant"
+      >
+        🤖
+        <span className="sr-chat-fab-label">AI Menu Assistant</span>
+        {/* unread dot when closed */}
+        {!open && <span className="sr-chat-fab-dot" />}
+      </button>
 
-      {/* Messages */}
-      <div className="sr-chat-messages">
-        {messages.map((m, i) => (
-          <div key={i} className={`sr-msg ${m.role}`}>
-            <div className="sr-msg-bubble">{m.text}</div>
+      {/* Chat popup */}
+      {open && (
+        <div className="sr-chat-popup shadow">
+          {/* Header */}
+          <div className="sr-chat-header">
+            <span>🤖</span>
+            <span>AI Menu Assistant</span>
+            <span className="dot" />
+            <button
+              className="sr-chat-close"
+              onClick={() => setOpen(false)}
+              aria-label="Close chat"
+            >✕</button>
           </div>
-        ))}
-        {loading && (
-          <div className="sr-msg bot">
-            <div className="sr-typing">
-              <span /><span /><span />
-            </div>
+
+          {/* Messages */}
+          <div className="sr-chat-messages">
+            {messages.map((m, i) => (
+              <div key={i} className={`sr-msg ${m.role}`}>
+                <div className="sr-msg-bubble">{m.text}</div>
+              </div>
+            ))}
+            {loading && (
+              <div className="sr-msg bot">
+                <div className="sr-typing">
+                  <span /><span /><span />
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
           </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
 
-      {/* Quick prompts */}
-      <div className="sr-quick-chips">
-        {QUICK_PROMPTS.map(p => (
-          <button key={p} className="sr-chip" onClick={() => send(p)} disabled={loading}>
-            {p}
-          </button>
-        ))}
-      </div>
+          {/* Quick prompts */}
+          <div className="sr-quick-chips">
+            {QUICK_PROMPTS.map(p => (
+              <button key={p} className="sr-chip" onClick={() => send(p)} disabled={loading}>
+                {p}
+              </button>
+            ))}
+          </div>
 
-      {/* Input */}
-      <div className="sr-chat-input">
-        <form onSubmit={handleSubmit} className="d-contents w-100 d-flex gap-2">
-          <input
-            className="form-control form-control-sm"
-            placeholder="Ask for suggestions..."
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            disabled={loading}
-            autoComplete="off"
-          />
-          <button className="sr-send-btn" type="submit" disabled={loading || !input.trim()}>
-            Send ↑
-          </button>
-        </form>
-      </div>
-    </div>
+          {/* Input */}
+          <div className="sr-chat-input">
+            <form onSubmit={handleSubmit} className="w-100 d-flex gap-2">
+              <input
+                className="form-control form-control-sm"
+                placeholder="Ask for suggestions..."
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                disabled={loading}
+                autoComplete="off"
+              />
+              <button className="sr-send-btn" type="submit" disabled={loading || !input.trim()}>
+                Send ↑
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
