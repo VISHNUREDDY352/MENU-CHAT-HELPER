@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Cart from './components/Cart'
 import MenuGrid from './components/MenuGrid'
 import ChatPanel from './components/ChatPanel'
+import ToastContainer, { useToast } from './components/Toast'
 
 // Persist cart to localStorage
 function loadCart() {
@@ -18,6 +19,7 @@ export default function App() {
   const [suggested, setSuggested] = useState([])
   const [loading, setLoading]     = useState(true)
   const [showCart, setShowCart]   = useState(false)
+  const { toasts, addToast, removeToast } = useToast()
 
   useEffect(() => {
     fetch('/api/menu/')
@@ -28,19 +30,31 @@ export default function App() {
 
   function addToCart(item) {
     setCart(prev => {
-      const next = prev.find(c => c.id === item.id)
+      const existing = prev.find(c => c.id === item.id)
+      const next = existing
         ? prev.map(c => c.id === item.id ? { ...c, qty: c.qty + 1 } : c)
         : [...prev, { ...item, qty: 1 }]
       saveCart(next)
       return next
     })
+    addToast({
+      message: `${item.name} added to cart`,
+      type: 'success',
+      icon: 'bi-cart-check'
+    })
   }
 
   function removeFromCart(id) {
+    const item = cart.find(c => c.id === id)
     setCart(prev => {
       const next = prev.filter(c => c.id !== id)
       saveCart(next)
       return next
+    })
+    if (item) addToast({
+      message: `${item.name} removed`,
+      type: 'error',
+      icon: 'bi-trash'
     })
   }
 
@@ -86,6 +100,9 @@ export default function App() {
           <ChatPanel onSuggest={setSuggested} />
         </div>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </>
   )
 }
