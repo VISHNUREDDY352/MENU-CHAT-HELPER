@@ -49,34 +49,33 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                       />
 
                       <div className="card-body d-flex flex-column gap-1 p-2">
-                        <div className="fw-semibold" style={{ fontSize: '0.95rem' }}>{item.name}</div>
+                        <div className="sr-label-lg">{item.name}</div>
 
                         {item.description && (
-                          <div className="text-muted sr-card-desc">{item.description}</div>
+                          <div className="sr-body-sm text-muted sr-card-desc">{item.description}</div>
                         )}
 
                         <div className="d-flex flex-wrap gap-1 mt-1">
-                          <span className="badge rounded-pill" style={{
-                            fontSize: '0.68rem',
+                          <span className="badge rounded-pill sr-label-xs" style={{
                             background: item.is_veg ? '#06C270' : '#FF3B3B',
                             color: '#fff'
                           }}>
                             {item.is_veg ? '🌿 Veg' : '🍗 Non-veg'}
                           </span>
                           {item.is_spicy && (
-                            <span className="badge rounded-pill" style={{ fontSize: '0.68rem', background: '#FFCC00', color: '#1A3A3C' }}>
+                            <span className="badge rounded-pill sr-label-xs" style={{ background: '#FFCC00', color: '#3A3A3C' }}>
                               🌶 Spicy
                             </span>
                           )}
                         </div>
 
                         {item.calories && (
-                          <div className="sr-calories">🔥 {item.calories} kcal</div>
+                          <div className="sr-calories sr-label-sm">🔥 {item.calories} kcal</div>
                         )}
 
                         <div className="d-flex justify-content-between align-items-center mt-auto pt-2">
-                          <span className="sr-price">₹{Number(item.price).toFixed(0)}</span>
-                          <button className="sr-add-btn" onClick={() => onAdd(item)}>+ Add</button>
+                          <span className="sr-price sr-h5">₹{Number(item.price).toFixed(0)}</span>
+                          <button className="sr-add-btn sr-label" onClick={() => onAdd(item)}>+ Add</button>
                         </div>
                       </div>
 
