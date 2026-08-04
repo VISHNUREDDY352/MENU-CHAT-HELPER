@@ -2,15 +2,10 @@ import { useState, useRef, useEffect } from 'react'
 
 const BG_VIDEO = '/bg.mp4'
 
-// Generate a random 6-digit OTP
-function generateOTP() {
-  return String(Math.floor(100000 + Math.random() * 900000))
-}
-
 // ── Step 1: Phone number entry ──────────────────────────────
 function PhoneStep({ onSendOTP }) {
-  const [phone, setPhone]   = useState('')
-  const [error, setError]   = useState('')
+  const [phone, setPhone]     = useState('')
+  const [error, setError]     = useState('')
   const [loading, setLoading] = useState(false)
 
   function validate(val) {
@@ -19,17 +14,26 @@ function PhoneStep({ onSendOTP }) {
     return ''
   }
 
-  function handleSend(e) {
+  async function handleSend(e) {
     e.preventDefault()
     const err = validate(phone)
     if (err) { setError(err); return }
     setLoading(true)
-    // Simulate network delay then generate OTP
-    setTimeout(() => {
-      const otp = generateOTP()
+    try {
+      const res  = await fetch('/api/auth/send-otp/', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ phone }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Failed to send OTP.'); return }
+      // Backend returns otp in demo mode
+      onSendOTP(phone, data.otp)
+    } catch {
+      setError('Network error. Please check your connection.')
+    } finally {
       setLoading(false)
-      onSendOTP(phone, otp)
-    }, 900)
+    }
   }
 
   return (
@@ -51,8 +55,7 @@ function PhoneStep({ onSendOTP }) {
             placeholder="Enter 10-digit number"
             value={phone}
             onChange={e => {
-              const v = e.target.value.replace(/\D/g, '').slice(0, 10)
-              setPhone(v)
+              setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))
               setError('')
             }}
             autoComplete="tel"
@@ -74,7 +77,7 @@ function PhoneStep({ onSendOTP }) {
 
       <p className="sr-login-hint">
         <i className="bi bi-shield-lock me-1"></i>
-        OTP will be sent via SMS to your number
+        OTP will be sent to your mobile number
       </p>
     </form>
   )
@@ -82,15 +85,14 @@ function PhoneStep({ onSendOTP }) {
 
 // ── Step 2: OTP verification ─────────────────────────────────
 function OTPStep({ phone, otp, onVerify, onBack }) {
-  const [digits, setDigits]     = useState(['', '', '', '', '', ''])
-  const [error, setError]       = useState('')
-  const [loading, setLoading]   = useState(false)
+  const [digits, setDigits]           = useState(['', '', '', '', '', ''])
+  const [error, setError]             = useState('')
+  const [loading, setLoading]         = useState(false)
   const [resendTimer, setResendTimer] = useState(30)
   const [resendLoading, setResendLoading] = useState(false)
-  const [newOtp, setNewOtp]     = useState(otp)
-  const inputRefs               = useRef([])
+  const [currentOtp, setCurrentOtp]   = useState(otp)
+  const inputRefs = useRef([])
 
-  // Countdown timer for resend
   useEffect(() => {
     if (resendTimer <= 0) return
     const t = setTimeout(() => setResendTimer(r => r - 1), 1000)
@@ -103,9 +105,7 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
     next[idx] = v
     setDigits(next)
     setError('')
-    // Auto-focus next box
     if (v && idx < 5) inputRefs.current[idx + 1]?.focus()
-    // Auto-submit when all 6 filled
     if (v && idx === 5) {
       const code = [...next.slice(0, 5), v].join('')
       if (code.length === 6) verifyCode(code)
@@ -113,34 +113,42 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
   }
 
   function handleKeyDown(idx, e) {
-    if (e.key === 'Backspace' && !digits[idx] && idx > 0) {
+    if (e.key === 'Backspace' && !digits[idx] && idx > 0)
       inputRefs.current[idx - 1]?.focus()
-    }
   }
 
   function handlePaste(e) {
     const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
     if (pasted.length === 6) {
-      const arr = pasted.split('')
-      setDigits(arr)
+      setDigits(pasted.split(''))
       inputRefs.current[5]?.focus()
       verifyCode(pasted)
     }
     e.preventDefault()
   }
 
-  function verifyCode(code) {
-    if (code !== newOtp) {
-      setError('Incorrect OTP. Please try again.')
-      setDigits(['', '', '', '', '', ''])
-      inputRefs.current[0]?.focus()
-      return
-    }
+  async function verifyCode(code) {
     setLoading(true)
-    setTimeout(() => {
+    try {
+      const res  = await fetch('/api/auth/verify-otp/', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ phone, otp: code }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Incorrect OTP. Please try again.')
+        setDigits(['', '', '', '', '', ''])
+        inputRefs.current[0]?.focus()
+        return
+      }
+      // data = { id, phone, name }
+      onVerify(data)
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
       setLoading(false)
-      onVerify(phone)
-    }, 700)
+    }
   }
 
   function handleSubmit(e) {
@@ -150,28 +158,32 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
     verifyCode(code)
   }
 
-  function handleResend() {
+  async function handleResend() {
     setResendLoading(true)
-    setTimeout(() => {
-      const fresh = generateOTP()
-      setNewOtp(fresh)
-      setDigits(['', '', '', '', '', ''])
-      setError('')
-      setResendTimer(30)
+    try {
+      const res  = await fetch('/api/auth/send-otp/', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ phone }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setCurrentOtp(data.otp)
+        setDigits(['', '', '', '', '', ''])
+        setError('')
+        setResendTimer(30)
+        inputRefs.current[0]?.focus()
+      }
+    } catch {
+      setError('Failed to resend. Try again.')
+    } finally {
       setResendLoading(false)
-      inputRefs.current[0]?.focus()
-      // In demo: show alert with new OTP
-      alert(`[DEMO] Your new OTP is: ${fresh}`)
-    }, 800)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <button
-        type="button"
-        className="sr-login-back"
-        onClick={onBack}
-      >
+      <button type="button" className="sr-login-back" onClick={onBack}>
         <i className="bi bi-arrow-left me-1"></i>Change number
       </button>
 
@@ -180,13 +192,12 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
         Sent to <strong style={{ color: '#fff' }}>+91 {phone}</strong>
       </p>
 
-      {/* Demo OTP hint */}
+      {/* Demo hint — shows OTP since no real SMS */}
       <div className="sr-login-otp-demo-hint">
         <i className="bi bi-info-circle me-1"></i>
-        <strong>Demo OTP:</strong>&nbsp;{newOtp}
+        <strong>Demo OTP:</strong>&nbsp;{currentOtp}
       </div>
 
-      {/* 6 digit boxes */}
       <div className="sr-otp-row" onPaste={handlePaste}>
         {digits.map((d, i) => (
           <input
@@ -221,7 +232,6 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
           : <><i className="bi bi-check-circle me-2"></i>Verify & Enter</>}
       </button>
 
-      {/* Resend */}
       <div className="sr-login-resend">
         {resendTimer > 0
           ? <span>Resend OTP in <strong>{resendTimer}s</strong></span>
@@ -241,7 +251,7 @@ function OTPStep({ phone, otp, onVerify, onBack }) {
 
 // ── Main Login component ──────────────────────────────────────
 export default function Login({ onLogin }) {
-  const [step, setStep]   = useState('phone')   // 'phone' | 'otp'
+  const [step, setStep] = useState('phone')
   const [phone, setPhone] = useState('')
   const [otp, setOtp]     = useState('')
 
@@ -249,49 +259,33 @@ export default function Login({ onLogin }) {
     setPhone(ph)
     setOtp(generatedOtp)
     setStep('otp')
-    // In a real app: call your backend here to trigger SMS
-    // For demo: show the OTP in an alert
-    alert(`[DEMO] Your OTP for +91 ${ph} is: ${generatedOtp}\n\n(In production this would be sent via SMS)`)
   }
 
-  function handleVerify(ph) {
-    onLogin({ phone: ph, username: `+91${ph}` })
+  function handleVerify(customerData) {
+    // customerData = { id, phone, name } from backend
+    onLogin({
+      id:       customerData.id,
+      phone:    customerData.phone,
+      name:     customerData.name || '',
+      username: `+91${customerData.phone}`,
+    })
   }
 
   return (
     <div className="sr-login-root">
-      {/* Background video */}
-      <video
-        className="sr-login-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        src={BG_VIDEO}
-      />
-      {/* Dark overlay */}
+      <video className="sr-login-video" autoPlay muted loop playsInline preload="auto" src={BG_VIDEO} />
       <div className="sr-login-overlay" />
-
-      {/* Content */}
       <div className="sr-login-center">
         <div className="sr-login-brand">
           <i className="bi bi-cup-hot-fill me-2"></i>SpiceRoute
         </div>
         <p className="sr-login-tagline">India's finest dining experience</p>
-
         <div className="sr-login-card">
           {step === 'phone'
             ? <PhoneStep onSendOTP={handleSendOTP} />
-            : <OTPStep
-                phone={phone}
-                otp={otp}
-                onVerify={handleVerify}
-                onBack={() => setStep('phone')}
-              />
+            : <OTPStep phone={phone} otp={otp} onVerify={handleVerify} onBack={() => setStep('phone')} />
           }
         </div>
-
         <p className="sr-login-footer">© 2026 SpiceRoute · Fine Dining</p>
       </div>
     </div>

@@ -71,6 +71,14 @@ export default function App() {
   function handleUpdateUser(updated) {
     sessionStorage.setItem('sr_user', JSON.stringify(updated))
     setUser(updated)
+    // Save name to backend DB
+    if (updated.id) {
+      fetch(`/api/auth/customer/${updated.id}/`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name: updated.name }),
+      }).catch(() => {}) // silent fail — sessionStorage already updated
+    }
     addToast({ message: 'Name updated!', type: 'success', icon: 'bi-person-check' })
   }
 
@@ -117,15 +125,31 @@ export default function App() {
     })
   }
 
-  function placeOrder() {
+  async function placeOrder() {
     if (cart.length === 0) return
     const total = cart.reduce((s, i) => s + Number(i.price) * i.qty, 0)
     const order = {
-      id: orderCounter++,
-      date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      id:    orderCounter++,
+      date:  new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
       items: cart.map(c => ({ name: c.name, qty: c.qty })),
       total,
     }
+
+    // Save to backend if user has a DB id
+    if (user.id) {
+      try {
+        await fetch('/api/orders/', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            customer_id: user.id,
+            total,
+            items: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty })),
+          }),
+        })
+      } catch {} // silent fail — still saves to localStorage
+    }
+
     const updated = [order, ...orderHistory]
     setOrderHistory(updated)
     localStorage.setItem('sr_orders', JSON.stringify(updated))

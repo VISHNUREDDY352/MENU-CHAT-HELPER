@@ -151,8 +151,8 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove, sear
               {CATEGORY_LABEL[cat].label}
             </h2>
 
-            {/* Bootstrap grid: 3 cols desktop, 2 tablet, 1 mobile */}
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {/* Bootstrap grid: 4 cols desktop, 2 tablet, 1 mobile */}
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
               {group.map(item => {
                 const isHighlighted = suggestedSet.has(item.id)
                 return (
