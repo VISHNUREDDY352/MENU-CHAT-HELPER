@@ -21,6 +21,7 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
   const cartMap = Object.fromEntries((cart || []).map(c => [c.id, c.qty]))
 
   const [vegOnly,    setVegOnly]    = useState(false)
+  const [nonVegOnly, setNonVegOnly] = useState(false)
   const [spicyOnly,  setSpicyOnly]  = useState(false)
   const [activeCat,  setActiveCat]  = useState('all')
 
@@ -48,9 +49,13 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
         <label className="sr-toggle-label">
           <span className="sr-label">Veg Only</span>
           <div className="sr-toggle-wrap">
-            <input type="checkbox" className="sr-toggle-input" checked={vegOnly} onChange={e => setVegOnly(e.target.checked)} />
+            <input type="checkbox" className="sr-toggle-input" checked={vegOnly} onChange={e => { setVegOnly(e.target.checked); if (e.target.checked) setNonVegOnly(false) }} />
             <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
           </div>
+        </label>
+        <label className="sr-checkbox-label">
+          <input type="checkbox" className="sr-checkbox" checked={nonVegOnly} onChange={e => { setNonVegOnly(e.target.checked); if (e.target.checked) setVegOnly(false) }} />
+          <span className="sr-label">Non-Veg</span>
         </label>
         <label className="sr-checkbox-label">
           <input type="checkbox" className="sr-checkbox" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
@@ -61,8 +66,9 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
       {/* ── Menu sections ── */}
       {visibleCats.map(cat => {
         let group = items.filter(i => i.category === cat)
-        if (vegOnly)   group = group.filter(i => i.is_veg)
-        if (spicyOnly) group = group.filter(i => i.is_spicy)
+        if (vegOnly)    group = group.filter(i => i.is_veg)
+        if (nonVegOnly) group = group.filter(i => !i.is_veg)
+        if (spicyOnly)  group = group.filter(i => i.is_spicy)
         if (!group.length) return null
 
         return (
