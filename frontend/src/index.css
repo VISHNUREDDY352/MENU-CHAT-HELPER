@@ -662,6 +662,15 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   display: flex;
   flex-direction: column;
 }
+.sr-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--light-3);
+}
 .sr-chat-online-dot {
   width: 8px;
   height: 8px;

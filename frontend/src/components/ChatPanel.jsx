@@ -61,7 +61,7 @@ export default function ChatPanel({ onSuggest }) {
       </div>
 
       {/* Scrollable message list */}
-      <div className="card-body sr-chat-messages">
+      <div className="sr-chat-messages card-body p-0"  style={{ padding: 0 }}>
         {messages.map((m, i) => (
           <div key={i} className={`sr-msg ${m.role} ${m.isError ? 'error' : ''}`}>
             <div className="sr-msg-bubble" style={{ whiteSpace: 'pre-wrap' }}>{m.text}</div>
