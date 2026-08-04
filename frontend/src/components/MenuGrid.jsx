@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink']
 const CATEGORY_LABEL = {
@@ -25,48 +25,83 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
   const [spicyOnly,  setSpicyOnly]  = useState(false)
   const [activeCat,  setActiveCat]  = useState('all')
 
-  const visibleCats = activeCat === 'all' ? CATEGORY_ORDER : [activeCat]
+  const [menuOpen,   setMenuOpen]   = useState(false)
+  const menuRef = useRef(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClick(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   return (
     <div>
-      {/* ── Breadcrumb category nav ── */}
-      <nav className="sr-breadcrumb-nav" aria-label="Menu categories">
-        <ol className="sr-breadcrumb">
-          <li className={`sr-breadcrumb-item ${activeCat === 'all' ? 'active' : ''}`}>
-            <button onClick={() => setActiveCat('all')}>All</button>
-          </li>
-          {CATEGORY_ORDER.map(cat => (
-            <li key={cat} className={`sr-breadcrumb-item ${activeCat === cat ? 'active' : ''}`}>
-              <i className={`bi ${CATEGORY_LABEL[cat].icon} me-1`}></i>
-              <button onClick={() => setActiveCat(cat)}>{CATEGORY_LABEL[cat].label}</button>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      {/* ── Top bar: hamburger menu + filters ── */}
+      <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
 
-      {/* ── Filters ── */}
-      <div className="sr-filter-bar d-flex align-items-center gap-4 flex-wrap mb-3">
-        <label className="sr-toggle-label">
-          <span className="sr-label">Veg Only</span>
-          <div className="sr-toggle-wrap">
-            <input type="checkbox" className="sr-toggle-input" checked={vegOnly} onChange={e => { setVegOnly(e.target.checked); if (e.target.checked) setNonVegOnly(false) }} />
-            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
-          </div>
-        </label>
-        <label className="sr-toggle-label">
-          <span className="sr-label">Non-Veg</span>
-          <div className="sr-toggle-wrap">
-            <input type="checkbox" className="sr-toggle-input" checked={nonVegOnly} onChange={e => { setNonVegOnly(e.target.checked); if (e.target.checked) setVegOnly(false) }} />
-            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
-          </div>
-        </label>
-        <label className="sr-toggle-label">
-          <span className="sr-label">Spicy</span>
-          <div className="sr-toggle-wrap">
-            <input type="checkbox" className="sr-toggle-input" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
-            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
-          </div>
-        </label>
+        {/* Hamburger menu dropdown */}
+        <div className="sr-cat-menu" ref={menuRef}>
+          <button
+            className="sr-cat-menu-btn"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Menu categories"
+          >
+            <i className="bi bi-list me-2"></i>
+            <span className="sr-label">
+              {activeCat === 'all' ? 'Menu' : CATEGORY_LABEL[activeCat].label}
+            </span>
+            <i className={`bi bi-chevron-${menuOpen ? 'up' : 'down'} ms-2`}></i>
+          </button>
+
+          {menuOpen && (
+            <div className="sr-cat-dropdown">
+              <button
+                className={`sr-cat-option ${activeCat === 'all' ? 'active' : ''}`}
+                onClick={() => { setActiveCat('all'); setMenuOpen(false) }}
+              >
+                <i className="bi bi-grid me-2"></i>All Categories
+              </button>
+              {CATEGORY_ORDER.map(cat => (
+                <button
+                  key={cat}
+                  className={`sr-cat-option ${activeCat === cat ? 'active' : ''}`}
+                  onClick={() => { setActiveCat(cat); setMenuOpen(false) }}
+                >
+                  <i className={`bi ${CATEGORY_LABEL[cat].icon} me-2`}></i>
+                  {CATEGORY_LABEL[cat].label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Filters */}
+        <div className="sr-filter-bar d-flex align-items-center gap-3 flex-wrap">
+          <label className="sr-toggle-label">
+            <span className="sr-label">Veg</span>
+            <div className="sr-toggle-wrap">
+              <input type="checkbox" className="sr-toggle-input" checked={vegOnly} onChange={e => { setVegOnly(e.target.checked); if (e.target.checked) setNonVegOnly(false) }} />
+              <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
+            </div>
+          </label>
+          <label className="sr-toggle-label">
+            <span className="sr-label">Non-Veg</span>
+            <div className="sr-toggle-wrap">
+              <input type="checkbox" className="sr-toggle-input" checked={nonVegOnly} onChange={e => { setNonVegOnly(e.target.checked); if (e.target.checked) setVegOnly(false) }} />
+              <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
+            </div>
+          </label>
+          <label className="sr-toggle-label">
+            <span className="sr-label">Spicy</span>
+            <div className="sr-toggle-wrap">
+              <input type="checkbox" className="sr-toggle-input" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
+              <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
+            </div>
+          </label>
+        </div>
       </div>
 
       {/* ── Menu sections ── */}
