@@ -14,17 +14,14 @@ const CATEGORY_FALLBACK = {
   drink:   'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80',
 }
 
-export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
-  // suggested is now an array of item IDs (integers)
+export default function MenuGrid({ items, suggested, onAdd, cart, onRemove, search }) {
   const suggestedSet = new Set(suggested)
-  // quick lookup: item id → qty in cart
   const cartMap = Object.fromEntries((cart || []).map(c => [c.id, c.qty]))
 
   const [vegOnly,    setVegOnly]    = useState(false)
   const [nonVegOnly, setNonVegOnly] = useState(false)
   const [spicyOnly,  setSpicyOnly]  = useState(false)
   const [activeCat,  setActiveCat]  = useState('all')
-
   const [menuOpen,   setMenuOpen]   = useState(false)
   const menuRef = useRef(null)
 
@@ -36,6 +33,21 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
+
+  // Apply search filter across all items first
+  const searchQuery = (search || '').toLowerCase().trim()
+  const searchFiltered = searchQuery
+    ? items.filter(i =>
+        i.name.toLowerCase().includes(searchQuery) ||
+        (i.description && i.description.toLowerCase().includes(searchQuery)) ||
+        i.category.toLowerCase().includes(searchQuery)
+      )
+    : items
+
+  // If searching, show all matching across all categories (ignore activeCat)
+  const categoriesToShow = searchQuery
+    ? CATEGORY_ORDER.filter(cat => searchFiltered.some(i => i.category === cat))
+    : (activeCat === 'all' ? CATEGORY_ORDER : [activeCat])
 
   return (
     <div>
@@ -104,9 +116,29 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
         </div>
       </div>
 
+      {/* ── Search results header ── */}
+      {searchQuery && (
+        <div className="sr-search-results-header">
+          <i className="bi bi-search me-2"></i>
+          {searchFiltered.length > 0
+            ? <><strong>{searchFiltered.length}</strong> result{searchFiltered.length !== 1 ? 's' : ''} for "<strong>{search}</strong>"</>
+            : <>No results for "<strong>{search}</strong>"</>
+          }
+        </div>
+      )}
+
+      {/* ── No results empty state ── */}
+      {searchQuery && searchFiltered.length === 0 && (
+        <div className="sr-search-empty">
+          <i className="bi bi-search" style={{ fontSize: '2.5rem', opacity: 0.2 }}></i>
+          <p>No dishes found for "<strong>{search}</strong>"</p>
+          <p style={{ fontSize: '13px', opacity: 0.5 }}>Try a different name or category</p>
+        </div>
+      )}
+
       {/* ── Menu sections ── */}
-      {(activeCat === 'all' ? CATEGORY_ORDER : [activeCat]).map(cat => {
-        let group = items.filter(i => i.category === cat)
+      {categoriesToShow.map(cat => {
+        let group = searchFiltered.filter(i => i.category === cat)
         if (vegOnly)    group = group.filter(i => i.is_veg)
         if (nonVegOnly) group = group.filter(i => !i.is_veg)
         if (spicyOnly)  group = group.filter(i => i.is_spicy)

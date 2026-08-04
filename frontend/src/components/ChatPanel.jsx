@@ -17,6 +17,7 @@ export default function ChatPanel({ onSuggest }) {
   const [messages, setMessages] = useState(INITIAL_MESSAGE)
   const [input, setInput]     = useState('')
   const [loading, setLoading] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
   const bottomRef             = useRef(null)
 
   function clearChat() {
@@ -25,13 +26,16 @@ export default function ChatPanel({ onSuggest }) {
   }
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+    if (!collapsed) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages, loading, collapsed])
 
   async function send(text) {
     const msg = (text || input).trim()
     if (!msg || loading) return
     setInput('')
+    if (collapsed) setCollapsed(false)
 
     const updatedMessages = [...messages, { role: 'user', text: msg }]
     setMessages(updatedMessages)
@@ -57,15 +61,23 @@ export default function ChatPanel({ onSuggest }) {
   }
 
   return (
-    <div className="card sr-chat-card">
-      {/* Card header */}
-      <div className="card-header sr-chat-header">
+    <div className={`card sr-chat-card ${collapsed ? 'sr-chat-collapsed' : ''}`}>
+      {/* Card header — click to collapse/expand */}
+      <div
+        className="card-header sr-chat-header sr-chat-header-clickable"
+        onClick={() => setCollapsed(o => !o)}
+        title={collapsed ? 'Expand chat' : 'Collapse chat'}
+        role="button"
+        aria-expanded={!collapsed}
+      >
         <i className="bi bi-robot me-2"></i>
         <span>AI Menu Assistant</span>
         <span className="sr-chat-online-dot ms-auto" title="Online"></span>
+        {/* Chevron shows up/down state */}
+        <i className={`bi bi-chevron-${collapsed ? 'up' : 'down'} ms-2 sr-chat-chevron`}></i>
         <button
           className="sr-chat-clear ms-2"
-          onClick={clearChat}
+          onClick={e => { e.stopPropagation(); clearChat() }}
           title="Clear chat"
           aria-label="Clear chat"
         >
@@ -73,53 +85,56 @@ export default function ChatPanel({ onSuggest }) {
         </button>
       </div>
 
-      {/* Scrollable message list */}
-      <div className="card-body sr-chat-messages">
-        {messages.map((m, i) => (
-          <div key={i} className={`sr-msg ${m.role} ${m.isError ? 'error' : ''}`}>
-            <div className="sr-msg-bubble" style={{ whiteSpace: 'pre-wrap' }}>{m.text}</div>
-          </div>
-        ))}
-
-        {/* Typing indicator */}
-        {loading && (
-          <div className="sr-msg bot">
-            <div className="sr-typing">
-              <span /><span /><span />
+      {/* Collapsible body — slides up/down */}
+      <div className="sr-chat-body-wrap">
+        {/* Scrollable message list */}
+        <div className="card-body sr-chat-messages">
+          {messages.map((m, i) => (
+            <div key={i} className={`sr-msg ${m.role} ${m.isError ? 'error' : ''}`}>
+              <div className="sr-msg-bubble" style={{ whiteSpace: 'pre-wrap' }}>{m.text}</div>
             </div>
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
+          ))}
 
-      {/* Quick prompt chips */}
-      <div className="sr-quick-chips">
-        {QUICK_PROMPTS.map(p => (
-          <button key={p} className="sr-chip" onClick={() => send(p)} disabled={loading}>
-            {p}
-          </button>
-        ))}
-      </div>
+          {/* Typing indicator */}
+          {loading && (
+            <div className="sr-msg bot">
+              <div className="sr-typing">
+                <span /><span /><span />
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
 
-      {/* Input + Send */}
-      <div className="card-footer sr-chat-input">
-        <form onSubmit={e => { e.preventDefault(); send() }} className="d-flex gap-2 w-100">
-          <input
-            className="sr-input flex-grow-1"
-            placeholder="Ask for suggestions..."
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            disabled={loading}
-            autoComplete="off"
-          />
-          <button
-            className="btn-sr-sm btn-sr-primary"
-            type="submit"
-            disabled={loading || !input.trim()}
-          >
-            <i className="bi bi-send"></i>
-          </button>
-        </form>
+        {/* Quick prompt chips */}
+        <div className="sr-quick-chips">
+          {QUICK_PROMPTS.map(p => (
+            <button key={p} className="sr-chip" onClick={() => send(p)} disabled={loading}>
+              {p}
+            </button>
+          ))}
+        </div>
+
+        {/* Input + Send */}
+        <div className="card-footer sr-chat-input">
+          <form onSubmit={e => { e.preventDefault(); send() }} className="d-flex gap-2 w-100">
+            <input
+              className="sr-input flex-grow-1"
+              placeholder="Ask for suggestions..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={loading}
+              autoComplete="off"
+            />
+            <button
+              className="btn-sr-sm btn-sr-primary"
+              type="submit"
+              disabled={loading || !input.trim()}
+            >
+              <i className="bi bi-send"></i>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
