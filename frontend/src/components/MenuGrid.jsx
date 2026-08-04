@@ -53,13 +53,19 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
             <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
           </div>
         </label>
-        <label className="sr-checkbox-label">
-          <input type="checkbox" className="sr-checkbox" checked={nonVegOnly} onChange={e => { setNonVegOnly(e.target.checked); if (e.target.checked) setVegOnly(false) }} />
+        <label className="sr-toggle-label">
           <span className="sr-label">Non-Veg</span>
+          <div className="sr-toggle-wrap">
+            <input type="checkbox" className="sr-toggle-input" checked={nonVegOnly} onChange={e => { setNonVegOnly(e.target.checked); if (e.target.checked) setVegOnly(false) }} />
+            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
+          </div>
         </label>
-        <label className="sr-checkbox-label">
-          <input type="checkbox" className="sr-checkbox" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
+        <label className="sr-toggle-label">
           <span className="sr-label">Spicy</span>
+          <div className="sr-toggle-wrap">
+            <input type="checkbox" className="sr-toggle-input" checked={spicyOnly} onChange={e => setSpicyOnly(e.target.checked)} />
+            <span className="sr-toggle-track"><span className="sr-toggle-thumb" /></span>
+          </div>
         </label>
       </div>
 
