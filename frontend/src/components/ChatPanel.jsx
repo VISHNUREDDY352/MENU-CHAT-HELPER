@@ -52,7 +52,7 @@ export default function ChatPanel({ onSuggest }) {
   }
 
   return (
-    <div className="card sr-chat-card sticky-top" style={{ top: '50px' }}>
+    <div className="card sr-chat-card">
       {/* Card header */}
       <div className="card-header sr-chat-header">
         <i className="bi bi-robot me-2"></i>

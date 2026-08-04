@@ -56,36 +56,34 @@ export default function App() {
 
   return (
     <>
-      {/* ── Navbar ── */}
-      <nav className="sr-nav navbar navbar-dark">
-        <div className="container-fluid">
-          <span className="sr-nav-brand"><i className="bi bi-cup-hot me-2"></i>SpiceRoute</span>
-          <span className="sr-nav-sub d-none d-md-block">Fine Dining Experience</span>
+      {/* ── Fixed top: Navbar + Cart bar ── */}
+      <div className="sr-fixed-top">
+        <nav className="sr-nav navbar navbar-dark">
+          <div className="container-fluid">
+            <span className="sr-nav-brand"><i className="bi bi-cup-hot me-2"></i>SpiceRoute</span>
+            <span className="sr-nav-sub d-none d-md-block">Fine Dining Experience</span>
+          </div>
+        </nav>
+        <Cart
+          cart={cart}
+          onRemove={removeFromCart}
+          show={showCart}
+          onToggle={() => setShowCart(o => !o)}
+          onClose={() => setShowCart(false)}
+          itemCount={itemCount}
+          total={total}
+        />
+      </div>
+
+      {/* ── Body below fixed header ── */}
+      <div className="sr-body-layout">
+        {/* Left: scrollable menu */}
+        <div className="sr-menu-col">
+          <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
         </div>
-      </nav>
-
-      {/* ── Section 1: Cart bar — sticky, full width ── */}
-      <Cart
-        cart={cart}
-        onRemove={removeFromCart}
-        show={showCart}
-        onToggle={() => setShowCart(o => !o)}
-        onClose={() => setShowCart(false)}
-        itemCount={itemCount}
-        total={total}
-      />
-
-      {/* ── Sections 2 + 3: Menu (left 8col) + Chat (right 4col) ── */}
-      <div className="container-fluid px-3 py-3" style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <div className="row g-3">
-          {/* Section 2 — Menu Grid */}
-          <div className="col-12 col-lg-8">
-            <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
-          </div>
-          {/* Section 3 — Chat Panel */}
-          <div className="col-12 col-lg-4">
-            <ChatPanel onSuggest={setSuggested} />
-          </div>
+        {/* Right: fixed chat panel */}
+        <div className="sr-chat-col">
+          <ChatPanel onSuggest={setSuggested} />
         </div>
       </div>
     </>

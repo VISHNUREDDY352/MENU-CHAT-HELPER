@@ -608,6 +608,79 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ══════════════════════════════════════
+   FIXED LAYOUT — navbar+cart fixed top,
+   menu scrolls, chat fixed right
+   ══════════════════════════════════════ */
+
+/* Combined fixed header height: navbar(64px) + cartbar(48px) = 112px */
+.sr-fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Body pushed down by fixed header */
+.sr-body-layout {
+  position: fixed;
+  top: 112px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 0;
+}
+
+/* Left: menu — scrollable */
+.sr-menu-col {
+  flex: 1 1 0;
+  overflow-y: auto;
+  padding: 24px 24px 24px 24px;
+  min-width: 0;
+}
+
+/* Right: chat — fixed, no scroll on column */
+.sr-chat-col {
+  flex: 0 0 380px;
+  width: 380px;
+  padding: 16px 16px 16px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Chat card fills the right column fully */
+.sr-chat-card {
+  border: 1px solid var(--light-2) !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* On mobile: stack vertically, chat below menu */
+@media (max-width: 991px) {
+  .sr-body-layout {
+    position: static;
+    flex-direction: column;
+    margin-top: 112px;
+  }
+  .sr-menu-col {
+    overflow-y: visible;
+    padding: 16px;
+  }
+  .sr-chat-col {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 16px 16px;
+    height: 500px;
+  }
+}
+
+/* ══════════════════════════════════════
    SECTION 1 — Cart bar (sticky top)
    ══════════════════════════════════════ */
 .sr-cartbar {

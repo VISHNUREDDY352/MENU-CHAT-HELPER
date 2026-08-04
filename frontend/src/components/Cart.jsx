@@ -2,7 +2,7 @@ export default function Cart({ cart, onRemove, show, onToggle, onClose, itemCoun
   return (
     <>
       {/* ── Section 1: Sticky cart bar ── */}
-      <div className="sr-cartbar sticky-top">
+      <div className="sr-cartbar">
         <div className="container-fluid d-flex align-items-center gap-3" style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <i className="bi bi-cart-fill me-1"></i>
           <span className="sr-label">
