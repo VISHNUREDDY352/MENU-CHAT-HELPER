@@ -30,7 +30,7 @@ export default function App() {
 
   if (loading) return (
     <div className="sr-loading-screen">
-      <div className="sr-loading-brand">🍽️ SpiceRoute</div>
+      <div className="sr-loading-brand"><i className="bi bi-cup-hot me-2"></i>SpiceRoute</div>
       <div className="sr-spinner" />
     </div>
   )
@@ -40,7 +40,7 @@ export default function App() {
       {/* Navbar */}
       <nav className="sr-nav">
         <div>
-          <div className="sr-nav-brand">🍽️ SpiceRoute</div>
+          <div className="sr-nav-brand"><i className="bi bi-cup-hot me-2"></i>SpiceRoute</div>
           <div className="sr-nav-sub">Fine Dining Experience</div>
         </div>
       </nav>

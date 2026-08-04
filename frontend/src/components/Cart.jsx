@@ -3,13 +3,13 @@ export default function Cart({ cart, onRemove }) {
 
   if (cart.length === 0) return (
     <div className="sr-cart d-flex align-items-center">
-      <span className="text-secondary small">🛒 Your cart is empty — add something delicious!</span>
+      <span className="text-secondary small"><i className="bi bi-cart me-1"></i>Your cart is empty — add something delicious!</span>
     </div>
   )
 
   return (
     <div className="sr-cart d-flex align-items-center flex-wrap gap-2">
-      <span className="fw-semibold small" style={{ color: 'var(--main-light)' }}>🛒 Cart</span>
+      <span className="fw-semibold small" style={{ color: 'var(--main-light)' }}><i className="bi bi-cart me-1"></i>Cart</span>
 
       {cart.map(item => (
         <span key={item.id} className="sr-cart-chip">

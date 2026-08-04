@@ -69,7 +69,7 @@ export default function ChatPanel({ onSuggest }) {
         aria-label="Toggle AI Chat Assistant"
         title="AI Menu Assistant"
       >
-        🤖
+        <i className="bi bi-robot"></i>
         <span className="sr-chat-fab-label">AI Menu Assistant</span>
         {!open && <span className="sr-chat-fab-dot" />}
       </button>
@@ -79,14 +79,14 @@ export default function ChatPanel({ onSuggest }) {
         <div className="sr-chat-popup shadow">
           {/* Header */}
           <div className="sr-chat-header">
-            <span>🤖</span>
+            <i className="bi bi-robot"></i>
             <span>AI Menu Assistant</span>
             <span className="dot" />
             <button
               className="sr-chat-close"
               onClick={() => setOpen(false)}
               aria-label="Close chat"
-            >✕</button>
+            ><i className="bi bi-x-lg"></i></button>
           </div>
 
           {/* Messages */}
@@ -129,7 +129,7 @@ export default function ChatPanel({ onSuggest }) {
                 autoComplete="off"
               />
               <button className="sr-send-btn" type="submit" disabled={loading || !input.trim()}>
-                Send ↑
+                <i className="bi bi-send me-1"></i>Send
               </button>
             </form>
           </div>

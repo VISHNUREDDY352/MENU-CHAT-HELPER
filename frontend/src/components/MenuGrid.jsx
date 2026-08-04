@@ -1,9 +1,9 @@
 const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink']
 const CATEGORY_LABEL = {
-  starter: '🥗 Starters',
-  main:    '🍛 Main Course',
-  dessert: '🍮 Desserts',
-  drink:   '🥤 Drinks',
+  starter: <><i className="bi bi-egg-fried me-2"></i>Starters</>,
+  main:    <><i className="bi bi-bowl-hot me-2"></i>Main Course</>,
+  dessert: <><i className="bi bi-ice-cream me-2"></i>Desserts</>,
+  drink:   <><i className="bi bi-cup-straw me-2"></i>Drinks</>,
 }
 
 // Generic fallback per category if DB image_url is missing or broken
@@ -33,7 +33,7 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                     <div className={`card h-100 shadow-sm sr-card ${isHighlighted ? 'highlighted' : ''}`}>
 
                       {isHighlighted && (
-                        <div className="sr-ai-badge">✨ AI Pick</div>
+                        <div className="sr-ai-badge"><i className="bi bi-stars me-1"></i>AI Pick</div>
                       )}
 
                       {/* Use image_url from DB directly */}
@@ -60,22 +60,28 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                             background: item.is_veg ? '#06C270' : '#FF3B3B',
                             color: '#fff'
                           }}>
-                            {item.is_veg ? '🌿 Veg' : '🍗 Non-veg'}
+                            {item.is_veg
+                              ? <><i className="bi bi-flower1 me-1"></i>Veg</>
+                              : <><i className="bi bi-egg me-1"></i>Non-veg</>}
                           </span>
                           {item.is_spicy && (
                             <span className="badge rounded-pill sr-label-xs" style={{ background: '#FFCC00', color: '#3A3A3C' }}>
-                              🌶 Spicy
+                              <i className="bi bi-thermometer-high me-1"></i>Spicy
                             </span>
                           )}
                         </div>
 
                         {item.calories && (
-                          <div className="sr-calories sr-label-sm">🔥 {item.calories} kcal</div>
+                          <div className="sr-calories sr-label-sm">
+                            <i className="bi bi-fire me-1"></i>{item.calories} kcal
+                          </div>
                         )}
 
                         <div className="d-flex justify-content-between align-items-center mt-auto pt-2">
                           <span className="sr-price sr-h5">₹{Number(item.price).toFixed(0)}</span>
-                          <button className="sr-add-btn sr-label" onClick={() => onAdd(item)}>+ Add</button>
+                          <button className="sr-add-btn sr-label" onClick={() => onAdd(item)}>
+                            <i className="bi bi-plus me-1"></i>Add
+                          </button>
                         </div>
                       </div>
 
