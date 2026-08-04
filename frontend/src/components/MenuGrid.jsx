@@ -105,7 +105,7 @@ export default function MenuGrid({ items, suggested, onAdd, cart, onRemove }) {
       </div>
 
       {/* ── Menu sections ── */}
-      {visibleCats.map(cat => {
+      {(activeCat === 'all' ? CATEGORY_ORDER : [activeCat]).map(cat => {
         let group = items.filter(i => i.category === cat)
         if (vegOnly)    group = group.filter(i => i.is_veg)
         if (nonVegOnly) group = group.filter(i => !i.is_veg)
