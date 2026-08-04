@@ -18,25 +18,24 @@ export default function MenuGrid({ items, suggested, onAdd }) {
   const suggestedLower = suggested.map(s => s.toLowerCase().trim())
 
   return (
-    <div className="d-flex flex-column gap-4">
+    <div className="d-flex flex-column">
       {CATEGORY_ORDER.map(cat => {
         const group = items.filter(i => i.category === cat)
         if (!group.length) return null
         return (
-          <section key={cat}>
+          <section key={cat} className="sr-category-section">
             <h2 className="sr-category-title">{CATEGORY_LABEL[cat]}</h2>
-            <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+            <div className="sr-menu-grid">
               {group.map(item => {
                 const isHighlighted = suggestedLower.includes(item.name.toLowerCase().trim())
                 return (
-                  <div key={item.id} className="col">
+                  <div key={item.id} className="sr-menu-card-col">
                     <div className={`card h-100 shadow-sm sr-card ${isHighlighted ? 'highlighted' : ''}`}>
 
                       {isHighlighted && (
                         <div className="sr-ai-badge"><i className="bi bi-stars me-1"></i>AI Pick</div>
                       )}
 
-                      {/* Use image_url from DB directly */}
                       <img
                         src={item.image_url || CATEGORY_FALLBACK[item.category] || CATEGORY_FALLBACK.main}
                         className="sr-card-img"

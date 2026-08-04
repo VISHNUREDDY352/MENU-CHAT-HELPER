@@ -23,6 +23,20 @@
   --light-2:    #E8EBF0;
   --light-3:    #F2F2F5;
   --light-4:    #FAFAFC;
+
+  /* Spacing scale: 8px base unit */
+  --sp-1:  8px;
+  --sp-2:  16px;
+  --sp-3:  24px;
+  --sp-4:  32px;
+  --sp-5:  40px;
+  --sp-6:  64px;
+  --sp-7:  80px;
+  --sp-8:  96px;
+  --sp-9:  120px;
+
+  /* Grid gutters */
+  --gutter: 30px;
 }
 
 /* ── Base ── */
@@ -118,7 +132,90 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   gap: 0.4rem;
 }
 
-/* ── Category title ── */
+/* ── Grid container — style guide spec ── */
+/*
+  Desktop HD (≥1440px): 12 col, gutter 30px, col 65px, centered
+  Desktop    (≥1024px): 12 col, gutter 30px, col 50px, centered
+  Tablet     (≥768px) :  6 col, gutter 30px, col 88px, centered
+  Mobile     (<768px) :  2 col, gutter 30px, col 130px, centered
+*/
+
+.sr-grid-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sp-3) var(--gutter);   /* 24px top/bottom, 30px sides */
+  box-sizing: border-box;
+}
+
+/* Desktop HD: 12 cols × 65px + 11 gutters × 30px = 1110px content */
+@media (min-width: 1440px) {
+  .sr-grid-container {
+    max-width: 1440px;
+    padding-left: calc((1440px - (12 * 65px + 11 * 30px)) / 2);
+    padding-right: calc((1440px - (12 * 65px + 11 * 30px)) / 2);
+  }
+}
+
+/* Desktop: 12 cols × 50px + 11 × 30px = 930px content */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .sr-grid-container {
+    max-width: 1024px;
+    padding-left: calc((1024px - (12 * 50px + 11 * 30px)) / 2);
+    padding-right: calc((1024px - (12 * 50px + 11 * 30px)) / 2);
+  }
+}
+
+/* ── Menu card grid ── */
+.sr-menu-grid {
+  display: grid;
+  gap: var(--gutter);   /* 30px gutter */
+  grid-template-columns: repeat(2, 130px);       /* Mobile: 2 col × 130px */
+  justify-content: center;
+}
+
+/* Tablet ≥768px: 6 columns × 88px */
+@media (min-width: 768px) {
+  .sr-menu-grid {
+    grid-template-columns: repeat(6, 88px);
+  }
+}
+
+/* Desktop ≥1024px: 12 columns × 50px */
+@media (min-width: 1024px) {
+  .sr-menu-grid {
+    grid-template-columns: repeat(12, 50px);
+  }
+}
+
+/* Desktop HD ≥1440px: 12 columns × 65px */
+@media (min-width: 1440px) {
+  .sr-menu-grid {
+    grid-template-columns: repeat(12, 65px);
+  }
+}
+
+/* Cards span multiple columns to look good at each breakpoint */
+/* Mobile:  each card = 1 col (130px) */
+/* Tablet:  each card = 3 cols (88×3 + 2×30 = 324px) */
+/* Desktop: each card = 4 cols (50×4 + 3×30 = 290px) */
+/* HD:      each card = 3 cols (65×3 + 2×30 = 255px) */
+.sr-menu-card-col {
+  grid-column: span 1;
+}
+@media (min-width: 768px) {
+  .sr-menu-card-col { grid-column: span 3; }
+}
+@media (min-width: 1024px) {
+  .sr-menu-card-col { grid-column: span 4; }
+}
+@media (min-width: 1440px) {
+  .sr-menu-card-col { grid-column: span 3; }
+}
+
+/* Category section spacing */
+.sr-category-section {
+  margin-bottom: var(--sp-6);   /* 64px between sections */
+}
 .sr-category-title {
   font-family: 'Mulish', sans-serif;
   font-weight: 700;

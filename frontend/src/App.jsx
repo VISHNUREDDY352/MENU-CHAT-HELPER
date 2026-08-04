@@ -48,8 +48,8 @@ export default function App() {
       {/* Cart bar */}
       <Cart cart={cart} onRemove={removeFromCart} />
 
-      {/* Menu full width */}
-      <div className="container-fluid px-3 px-md-4 py-3" style={{ maxWidth: '1400px', margin: '0 auto' }}>
+      {/* Menu — grid per style guide spec */}
+      <div className="sr-grid-container">
         <MenuGrid items={menuItems} suggested={suggested} onAdd={addToCart} />
       </div>
 
