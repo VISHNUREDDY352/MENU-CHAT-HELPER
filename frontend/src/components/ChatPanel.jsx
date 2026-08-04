@@ -121,7 +121,7 @@ export default function ChatPanel({ onSuggest }) {
           <div className="sr-chat-input">
             <form onSubmit={handleSubmit} className="w-100 d-flex gap-2">
               <input
-                className="form-control form-control-sm"
+                className="sr-input"
                 placeholder="Ask for suggestions..."
                 value={input}
                 onChange={e => setInput(e.target.value)}

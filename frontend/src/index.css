@@ -457,28 +457,125 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   30% { transform: translateY(-5px); }
 }
 
-/* ── Chat input ── */
+/* ── Input field system — style guide spec ── */
+
+/* Base input */
+.sr-input {
+  width: 100%;
+  font-family: 'Mulish', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--dark-1);
+  background: #fff;
+  border: 1.5px solid var(--dark-4);   /* Normal: #C7C9D9 */
+  border-radius: 8px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  line-height: 1.5;
+}
+.sr-input::placeholder {
+  color: var(--dark-3);                /* #8F90A6 */
+  font-weight: 400;
+}
+
+/* Focus state: blue border + subtle ring */
+.sr-input:focus {
+  border-color: var(--main);           /* #3377FF */
+  box-shadow: 0 0 0 3px rgba(51,119,255,0.2);
+  background: #fff;
+}
+
+/* Error / Status color state */
+.sr-input.is-error {
+  border-color: var(--error);          /* #FF3B3B */
+  box-shadow: 0 0 0 3px rgba(255,59,59,0.15);
+}
+
+/* Disabled state */
+.sr-input:disabled {
+  background: var(--light-2);          /* #E8EBF0 */
+  border-color: var(--light-2);
+  color: var(--dark-3);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Input label */
+.sr-input-label {
+  display: block;
+  font-family: 'Mulish', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark-2);
+  margin-bottom: 6px;
+}
+
+/* Assistive / helper text */
+.sr-input-hint {
+  font-family: 'Mulish', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark-3);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sr-input-hint.is-error { color: var(--error); }
+
+/* Input with right icon wrapper */
+.sr-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.sr-input-wrapper .sr-input {
+  padding-right: 40px;
+}
+.sr-input-wrapper .sr-input-icon {
+  position: absolute;
+  right: 12px;
+  color: var(--dark-3);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* ── Chat input area ── */
 .sr-chat-input {
-  padding: 0.75rem;
+  padding: 12px;
   background: var(--light-4);
   border-top: 1px solid var(--light-2);
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
   flex-shrink: 0;
 }
 .sr-chat-input input {
   flex: 1;
-  border: 1.5px solid var(--light-2);
-  border-radius: 8px;
-  padding: 0.55rem 0.9rem;
-  font-size: 0.875rem;
-  outline: none;
-  transition: border-color 0.15s;
-  background: var(--light-3);
+  font-family: 'Mulish', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
   color: var(--dark-1);
+  background: #fff;
+  border: 1.5px solid var(--dark-4);
+  border-radius: 8px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.sr-chat-input input:focus { border-color: var(--main); background: var(--light-4); }
+.sr-chat-input input:focus {
+  border-color: var(--main);
+  box-shadow: 0 0 0 3px rgba(51,119,255,0.2);
+  background: #fff;
+}
 .sr-chat-input input::placeholder { color: var(--dark-3); }
+.sr-chat-input input:disabled {
+  background: var(--light-2);
+  border-color: var(--light-2);
+  color: var(--dark-3);
+  cursor: not-allowed;
+}
+
 /* ── Quick prompt chips ── */
 .sr-quick-chips {
   padding: 0.5rem 0.75rem;
