@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 const CATEGORY_ORDER = ['starter', 'main', 'dessert', 'drink']
 const CATEGORY_LABEL = {
-  starter: { icon: 'bi-egg-fried',  label: 'Starters' },
-  main:    { icon: 'bi-bowl-hot',   label: 'Main Course' },
-  dessert: { icon: 'bi-ice-cream',  label: 'Desserts' },
-  drink:   { icon: 'bi-cup-straw',  label: 'Drinks' },
+  starter: { icon: 'bi-egg-fried',   label: 'Starters' },
+  main:    { icon: 'bi-fire',         label: 'Main Course' },
+  dessert: { icon: 'bi-cake2',        label: 'Desserts' },
+  drink:   { icon: 'bi-cup-straw',    label: 'Drinks' },
 }
 const CATEGORY_FALLBACK = {
   starter: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=400&q=80',
