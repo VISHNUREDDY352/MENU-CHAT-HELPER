@@ -7,7 +7,10 @@ const CATEGORY_LABEL = {
   dessert: { icon: null,              label: 'Desserts',
     svg: (
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2" style={{verticalAlign:'-0.15em'}}>
-        <path d="M8 0a1 1 0 0 1 1 1v1h2a1 1 0 0 1 .894.553l1 2A1 1 0 0 1 12 6H4a1 1 0 0 1-.894-1.447l1-2A1 1 0 0 1 5 2h2V1a1 1 0 0 1 1-1zM2 7h12l-1.5 7H3.5L2 7z"/>
+        {/* Cake slice: triangular piece with frosting drip */}
+        <path d="M8 1 L1 13 L15 13 Z" />
+        <path d="M1 13 h14 v2 H1 Z" />
+        <path d="M7 3 Q8 5 9 3 Q10 5 11 3" fill="none" stroke="currentColor" strokeWidth="0.8"/>
       </svg>
     )
   },
