@@ -56,12 +56,15 @@ export default function MenuGrid({ items, suggested, onAdd }) {
                         )}
 
                         <div className="d-flex flex-wrap gap-1 mt-1">
-                          <span className={`badge rounded-pill ${item.is_veg ? 'text-bg-success' : 'text-bg-danger'}`}
-                            style={{ fontSize: '0.68rem' }}>
+                          <span className="badge rounded-pill" style={{
+                            fontSize: '0.68rem',
+                            background: item.is_veg ? '#06C270' : '#FF3B3B',
+                            color: '#fff'
+                          }}>
                             {item.is_veg ? '🌿 Veg' : '🍗 Non-veg'}
                           </span>
                           {item.is_spicy && (
-                            <span className="badge rounded-pill text-bg-warning" style={{ fontSize: '0.68rem' }}>
+                            <span className="badge rounded-pill" style={{ fontSize: '0.68rem', background: '#FFCC00', color: '#1A3A3C' }}>
                               🌶 Spicy
                             </span>
                           )}

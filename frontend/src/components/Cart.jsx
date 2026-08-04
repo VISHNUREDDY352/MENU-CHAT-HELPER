@@ -9,11 +9,10 @@ export default function Cart({ cart, onRemove }) {
 
   return (
     <div className="sr-cart d-flex align-items-center flex-wrap gap-2">
-      <span className="fw-semibold small" style={{ color: 'var(--gold)' }}>🛒 Cart</span>
+      <span className="fw-semibold small" style={{ color: 'var(--main-light)' }}>🛒 Cart</span>
 
       {cart.map(item => (
-        <span key={item.id} className="badge rounded-pill d-inline-flex align-items-center gap-1"
-          style={{ background: 'var(--dark-3)', color: '#e5e7eb', border: '1px solid #374151', fontWeight: 400 }}>
+        <span key={item.id} className="sr-cart-chip">
           {item.name}
           {item.qty > 1 && <strong> ×{item.qty}</strong>}
           <button
