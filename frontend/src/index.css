@@ -2476,3 +2476,150 @@ h6, .sr-h6 { font-family: 'Mulish', sans-serif; font-weight: 700; font-size: 16p
   flex-shrink: 0;
 }
 .sr-cart-offcanvas-trash:hover { background: rgba(255,59,59,0.1); }
+
+/* ════════════════════════════════════════
+   ORDER CONFIRMATION MODAL
+   ════════════════════════════════════════ */
+
+/* Backdrop */
+.sr-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Card */
+.sr-confirm-card {
+  background: var(--surface-card);
+  border-radius: 20px;
+  padding: 32px 28px 24px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+  animation: confirmPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+@keyframes confirmPop {
+  from { opacity: 0; transform: scale(0.8) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Green check icon */
+.sr-confirm-icon {
+  font-size: 56px;
+  color: var(--success);
+  margin-bottom: 12px;
+  animation: bounceIn 0.5s ease 0.1s both;
+}
+@keyframes bounceIn {
+  from { opacity: 0; transform: scale(0.5); }
+  60%  { transform: scale(1.15); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.sr-confirm-title {
+  font-family: 'Mulish', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.sr-confirm-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* Delivery time banner */
+.sr-confirm-delivery {
+  background: rgba(6,194,112,0.12);
+  border: 1px solid rgba(6,194,112,0.3);
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Item pills */
+.sr-confirm-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.sr-confirm-pill {
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 99px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Total */
+.sr-confirm-total {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.sr-confirm-total strong {
+  color: var(--main);
+  font-size: 18px;
+}
+
+/* Button */
+.sr-confirm-btn {
+  width: 100%;
+  background: var(--main);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-family: 'Mulish', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  margin-bottom: 12px;
+}
+.sr-confirm-btn:hover { background: var(--main-dark); }
+.sr-confirm-btn:active { transform: scale(0.98); }
+
+/* Auto-close progress bar */
+.sr-confirm-progress {
+  height: 3px;
+  background: var(--surface-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.sr-confirm-progress-bar {
+  height: 100%;
+  background: var(--main);
+  border-radius: 99px;
+  animation: shrink 6s linear forwards;
+}
+@keyframes shrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Cart from './components/Cart'
 import MenuGrid from './components/MenuGrid'
 import ChatPanel from './components/ChatPanel'
@@ -27,6 +27,59 @@ function loadOrders() {
 
 let orderCounter = loadOrders().length + 1
 
+// ── Order Confirmation Modal ─────────────────────────────────
+function OrderConfirmModal({ order, onClose }) {
+  const timerRef = useRef(null)
+
+  // Auto-close after 6 seconds
+  useEffect(() => {
+    timerRef.current = setTimeout(onClose, 6000)
+    return () => clearTimeout(timerRef.current)
+  }, [onClose])
+
+  return (
+    <div className="sr-confirm-backdrop" onClick={onClose}>
+      <div className="sr-confirm-card" onClick={e => e.stopPropagation()}>
+        {/* Animated checkmark */}
+        <div className="sr-confirm-icon">
+          <i className="bi bi-check-circle-fill"></i>
+        </div>
+
+        <h3 className="sr-confirm-title">Order Confirmed! 🎉</h3>
+        <p className="sr-confirm-sub">
+          Your order <strong>#{order.id}</strong> has been placed successfully.
+        </p>
+
+        <div className="sr-confirm-delivery">
+          <i className="bi bi-clock me-2"></i>
+          Estimated delivery: <strong>30 minutes</strong>
+        </div>
+
+        <div className="sr-confirm-items">
+          {order.items.map((it, i) => (
+            <span key={i} className="sr-confirm-pill">
+              {it.name} ×{it.qty}
+            </span>
+          ))}
+        </div>
+
+        <div className="sr-confirm-total">
+          Total paid: <strong>₹{Number(order.total).toFixed(0)}</strong>
+        </div>
+
+        <button className="sr-confirm-btn" onClick={onClose}>
+          <i className="bi bi-arrow-right me-2"></i>Continue Browsing
+        </button>
+
+        {/* Progress bar auto-close */}
+        <div className="sr-confirm-progress">
+          <div className="sr-confirm-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [user, setUser]               = useState(loadUser)
   const [menuItems, setMenuItems]     = useState([])
@@ -37,6 +90,7 @@ export default function App() {
   const [theme, setTheme]             = useState(loadTheme)
   const [search, setSearch]           = useState('')
   const [orderHistory, setOrderHistory] = useState(loadOrders)
+  const [orderConfirm, setOrderConfirm] = useState(null)
   const { toasts, addToast, removeToast } = useToast()
 
   useEffect(() => {
@@ -55,7 +109,6 @@ export default function App() {
   function handleLogin(userData) {
     sessionStorage.setItem('sr_user', JSON.stringify(userData))
     setUser(userData)
-    // Load this user's orders
     setOrderHistory(loadOrders())
   }
 
@@ -71,13 +124,12 @@ export default function App() {
   function handleUpdateUser(updated) {
     sessionStorage.setItem('sr_user', JSON.stringify(updated))
     setUser(updated)
-    // Save name to backend DB
     if (updated.id) {
       fetch(`/api/auth/customer/${updated.id}/`, {
         method:  'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ name: updated.name }),
-      }).catch(() => {}) // silent fail — sessionStorage already updated
+      }).catch(() => {})
     }
     addToast({ message: 'Name updated!', type: 'success', icon: 'bi-person-check' })
   }
@@ -135,7 +187,6 @@ export default function App() {
       total,
     }
 
-    // Save to backend if user has a DB id
     if (user.id) {
       try {
         await fetch('/api/orders/', {
@@ -147,7 +198,7 @@ export default function App() {
             items: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty })),
           }),
         })
-      } catch {} // silent fail — still saves to localStorage
+      } catch {}
     }
 
     const updated = [order, ...orderHistory]
@@ -156,7 +207,7 @@ export default function App() {
     setCart([])
     saveCart([])
     setShowCart(false)
-    addToast({ message: 'Order placed successfully! 🎉', type: 'success', icon: 'bi-bag-check' })
+    setOrderConfirm(order)   // ← show confirmation modal
   }
 
   if (!user) return <Login onLogin={handleLogin} />
@@ -184,7 +235,6 @@ export default function App() {
               </span>
             </span>
 
-            {/* ── Center: Search bar ── */}
             <div className="sr-nav-search">
               <i className="bi bi-search sr-nav-search-icon"></i>
               <input
@@ -196,17 +246,12 @@ export default function App() {
                 aria-label="Search menu"
               />
               {search && (
-                <button
-                  className="sr-nav-search-clear"
-                  onClick={() => setSearch('')}
-                  aria-label="Clear search"
-                >
+                <button className="sr-nav-search-clear" onClick={() => setSearch('')} aria-label="Clear search">
                   <i className="bi bi-x"></i>
                 </button>
               )}
             </div>
 
-            {/* Profile dropdown — top right of navbar */}
             <div className="ms-auto" style={{ zIndex: 1 }}>
               <ProfileDropdown
                 user={user}
@@ -250,6 +295,14 @@ export default function App() {
       </div>
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+
+      {/* ── Order confirmation modal ── */}
+      {orderConfirm && (
+        <OrderConfirmModal
+          order={orderConfirm}
+          onClose={() => setOrderConfirm(null)}
+        />
+      )}
     </>
   )
 }
