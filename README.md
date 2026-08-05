@@ -20,7 +20,7 @@ Kindly use the following credentials and update them in the backend `.env` file.
 
 ## Project Overview
 
-SpiceRoute is a smart digital restaurant menu app. Customers can access it on any device — desktop, laptop, or mobile — log in with their mobile OTP, browse the menu, ask an AI assistant for recommendations, and place orders seamlessly.
+SpiceRoute is an online food ordering app. Customers can access it on any device — desktop, laptop, or mobile — log in with their mobile OTP, browse the menu, ask an AI assistant for recommendations, and place orders seamlessly.
 
 ---
 
