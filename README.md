@@ -18,7 +18,15 @@ Kindly use the following credentials and update them in the backend `.env` file.
 
 ---
 
-## Project Overview
+## Screenshot
+
+![SpiceRoute App](https://raw.githubusercontent.com/internship-league4/team13/main/docs/screenshot.png)
+
+> Dark mode view showing menu grid, AI chat assistant, search bar, and cart bar
+
+---
+
+
 
 SpiceRoute is an online food ordering app. Customers can access it on any device — desktop, laptop, or mobile — log in with their mobile OTP, browse the menu, ask an AI assistant for recommendations, and place orders seamlessly.
 
